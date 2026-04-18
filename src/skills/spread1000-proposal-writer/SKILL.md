@@ -27,7 +27,12 @@ description: |
 
 ## Workflow
 
-1. **入力統合**: Phase 0〜2 の成果物を読み込み統合する
+1. **前提条件チェック（MANDATORY）**:
+   - `output/phase2-cost-estimate.md` が存在することを確認する
+   - 存在しない場合、**まず `spread1000-cost-estimator` を実行してコスト見積もりを生成してから申請書作成に進む**
+   - Phase 2 が「ドラフト（価格未検証）」状態の場合、申請書の経費欄に `⚠️ 価格未検証（推定値）` と太字で警告表示する
+   - **経費欄の数値を LLM の記憶で推定して埋めてはならない。必ず Phase 2 の取得済み単価を使用すること**
+2. **入力統合**: Phase 0〜2 の成果物を読み込み統合する
 2. **公募要件確認**: SPReAD の公募要件を確認
    - Read `references/proposal-guidelines.md` when checking requirements
 3. **申請書構成**:
@@ -61,6 +66,7 @@ description: |
 
 ## Gotchas
 
+- **🚫 経費欄の数値を LLM の学習データや推定値で埋めてはならない。** 経費の積算根拠は必ず `output/phase2-cost-estimate.md` の Azure Retail Prices API 取得済み単価に基づくこと。Phase 2 が存在しない場合は `spread1000-cost-estimator` を先に実行する
 - SPReAD は「AI を活用した科学研究の革新」が主旨。既存手法の単純な置き換えではなく、AI によって初めて可能になる研究アプローチを強調すること
 - 経費計画は SPReAD の予算上限（直接経費500万円以下）に収まるようにコスト見積もりを調整すること
 - 研究倫理・データ管理ポリシーへの言及を忘れないこと

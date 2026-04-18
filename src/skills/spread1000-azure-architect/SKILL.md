@@ -38,9 +38,18 @@ description: |
    - データフロー図を作成
    - セキュリティ・コンプライアンス要件を定義
    - 可用性・スケーラビリティの設計
-4. **構成設計書生成**: `output/phase1-azure-architecture.md` として保存
+4. **WAF ベストプラクティス検証**: Azure Well-Architected Framework の5本柱で設計を検証
+   - Read `references/waf-checklist.md` for the full checklist
+   - 信頼性: 可用性ゾーン、チェックポイント、リカバリ戦略
+   - セキュリティ: ネットワーク分離、Private Endpoint、マネージド ID、RBAC
+   - コスト最適化: オートスケール、Spot VM、ストレージ階層化
+   - 運用優秀性: IaC、MLOps パイプライン、監視
+   - パフォーマンス効率: GPU 活用率、リージョン配置、IOPS
+   - 各サービスの WAF Service Guide を `fetch` で参照し、最新の推奨構成を確認
+5. **構成設計書生成**: `output/phase1-azure-architecture.md` として保存
    - Reuse `assets/architecture-template.md` when producing the design document
-5. **検証**: 研究プランの要件を満たしているか確認
+   - WAF 検証結果を「WAF ベストプラクティス適合状況」セクションとして設計書に含める
+6. **最終検証**: 研究プランの要件を満たしているか確認
 
 ## Deliverables
 
@@ -55,6 +64,8 @@ description: |
 - [ ] セキュリティ（RBAC、ネットワーク分離、暗号化）が設計されている
 - [ ] スケーラビリティ（オートスケール、スポット VM 活用）が考慮されている
 - [ ] リージョン選定の根拠が明記されている
+- [ ] WAF 5本柱のチェックリストで検証済み（`references/waf-checklist.md` 参照）
+- [ ] WAF Service Guide の構成推奨事項が設計に反映されている
 
 ## Gotchas
 
@@ -73,12 +84,20 @@ description: |
 ## Validation Loop
 
 1. 構成設計書を生成する
-2. Check:
+2. **研究要件チェック**:
    - 研究プランの計算要件カバレッジ ≥ 100%
    - 選定したVMサイズのGPUメモリが学習に十分か
    - ストレージIOPSがデータ処理要件を満たすか
-3. If any check fails:
+3. **WAF ベストプラクティスチェック**:
+   - `references/waf-checklist.md` の5本柱チェックリストを全項目検証
+   - 採用した各 Azure サービスの WAF Service Guide を `fetch` で取得:
+     - Azure Machine Learning: `https://learn.microsoft.com/azure/well-architected/service-guides/azure-machine-learning`
+     - Azure Blob Storage: `https://learn.microsoft.com/azure/well-architected/service-guides/azure-blob-storage`
+     - Azure Key Vault: `https://learn.microsoft.com/azure/well-architected/service-guides/azure-key-vault`
+     - その他採用サービス: `https://learn.microsoft.com/azure/well-architected/service-guides/` で検索
+   - 「構成推奨事項 (Configuration recommendations)」セクションの各項目を設計と照合
+4. If any check fails:
    - VM サイズまたはサービスを再選定
-   - Microsoft Learn MCP で最新仕様を確認
+   - WAF Service Guide の構成推奨事項に従って設計を修正
    - 再検証する
-4. 全ゲートをパスした後のみ成果物を最終化する
+5. 全ゲートをパスした後のみ成果物を最終化する

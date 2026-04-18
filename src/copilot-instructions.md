@@ -27,6 +27,11 @@ output/
 ├── phase3-proposal.md             # SPReAD 申請書
 ├── review-report.md               # 申請書レビューレポート
 ├── submission-checklist.md        # 応募手続きチェックリスト
+├── diagrams/                      # draw.io 図面
+│   ├── system-architecture.drawio  # システム構成図
+│   ├── data-flow.drawio            # データフロー図
+│   ├── network-security.drawio     # ネットワーク・セキュリティ図
+│   └── cicd-pipeline.drawio        # CI/CD パイプライン図
 ├── phase4-iac/                    # IaC成果物
 │   ├── main.bicep
 │   ├── modules/
