@@ -1,6 +1,6 @@
 {
   "name": "@nahisaho/spread1000-builder",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "文部科学省 AI for Science 萌芽的挑戦研究創出事業（SPReAD）公募支援 GitHub Copilot Agent Skills スイート",
   "scripts": {
     "postinstall": "node install.js",
