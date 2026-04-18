@@ -1,14 +1,14 @@
-# Azure 研究基盤構成設計書
+# Azure Research Infrastructure Design Document
 
-## 1. 設計概要
+## 1. Design Overview
 
-### 対象研究
-<!-- 研究テーマ名を記載 -->
+### Target Research
+<!-- Research theme name -->
 
-### 設計方針
-<!-- アーキテクチャの設計方針・コンセプト -->
+### Design Principles
+<!-- Architecture design principles and concept -->
 
-## 2. アーキテクチャ図
+## 2. Architecture Diagram
 
 ```mermaid
 graph TB
@@ -23,80 +23,80 @@ graph TB
         end
     end
     
-    Researcher[研究者] --> AML
+    Researcher[Researcher] --> AML
     AML --> Compute
     AML --> Storage
     AML --> KV
 ```
 
-## 3. リソース構成
+## 3. Resource Configuration
 
-### コンピューティング
+### Compute
 
-| リソース | サービス | SKU | 数量 | 用途 |
-|---------|---------|-----|------|------|
+| Resource | Service | SKU | Quantity | Purpose |
+|----------|---------|-----|----------|---------|
 | | | | | |
 
-### ストレージ
+### Storage
 
-| リソース | サービス | SKU | 容量 | 用途 |
-|---------|---------|-----|------|------|
+| Resource | Service | SKU | Capacity | Purpose |
+|----------|---------|-----|----------|---------|
 | | | | | |
 
-### ネットワーク
+### Network
 
-| リソース | サービス | 構成 | 用途 |
-|---------|---------|------|------|
+| Resource | Service | Configuration | Purpose |
+|----------|---------|---------------|---------|
 | | | | |
 
-### セキュリティ
+### Security
 
-| リソース | サービス | 構成 | 用途 |
-|---------|---------|------|------|
+| Resource | Service | Configuration | Purpose |
+|----------|---------|---------------|---------|
 | | | | |
 
-## 4. データフロー
+## 4. Data Flow
 
 ```mermaid
 flowchart LR
-    Data[研究データ] --> Upload[データアップロード]
+    Data[Research Data] --> Upload[Data Upload]
     Upload --> Blob[Azure Blob Storage]
-    Blob --> Preprocess[前処理パイプライン]
-    Preprocess --> Train[モデル学習]
-    Train --> Registry[モデルレジストリ]
-    Registry --> Deploy[推論デプロイ]
+    Blob --> Preprocess[Preprocessing Pipeline]
+    Preprocess --> Train[Model Training]
+    Train --> Registry[Model Registry]
+    Registry --> Deploy[Inference Deployment]
 ```
 
-## 5. セキュリティ設計
+## 5. Security Design
 
-### ネットワーク分離
-<!-- VNet, NSG, Private Endpoint の構成 -->
+### Network Isolation
+<!-- VNet, NSG, Private Endpoint configuration -->
 
-### アクセス制御
-<!-- RBAC, Managed Identity の構成 -->
+### Access Control
+<!-- RBAC, Managed Identity configuration -->
 
-### データ保護
-<!-- 暗号化、バックアップの構成 -->
+### Data Protection
+<!-- Encryption, backup configuration -->
 
-## 6. スケーラビリティ設計
+## 6. Scalability Design
 
-### オートスケール設定
-<!-- Compute Cluster のスケール設定 -->
+### Autoscale Settings
+<!-- Compute Cluster scale settings -->
 
-### スポット VM 活用
-<!-- コスト最適化のためのスポットVM設定 -->
+### Spot VM Utilization
+<!-- Spot VM settings for cost optimization -->
 
-## 7. リージョン選定
+## 7. Region Selection
 
-| 候補リージョン | GPU 可用性 | レイテンシ | 選定理由 |
-|-------------|-----------|----------|---------|
+| Candidate Region | GPU Availability | Latency | Selection Rationale |
+|-----------------|-----------------|---------|---------------------|
 | Japan East | | | |
 | Japan West | | | |
 | East US | | | |
 
-## 8. WAF ベストプラクティス適合状況
+## 8. WAF Best Practices Compliance
 
-Azure Well-Architected Framework の5本柱に基づく設計検証結果。
+Design validation results based on the 5 pillars of the Azure Well-Architected Framework.
 
 ### 検証サマリー
 

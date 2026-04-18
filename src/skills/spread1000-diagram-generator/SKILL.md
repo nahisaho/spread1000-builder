@@ -22,7 +22,7 @@ Generate professional system architecture diagrams for Azure research infrastruc
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md` (Azure configuration design document)
+- `output/{project-name}/phase1-azure-architecture.md` (Azure configuration design document)
 - Diagram type specification (system architecture / data flow / network / security)
 
 ## Prerequisites
@@ -120,7 +120,7 @@ Add to VS Code `.vscode/mcp.json`:
 
 ### Step 1: Parse the Configuration Design Document
 
-Extract the following from `output/phase1-azure-architecture.md`:
+Extract the following from `output/{project-name}/phase1-azure-architecture.md`:
 
 - All Azure resources and their types (VM, Storage, VNet, Key Vault, etc.)
 - Connections and dependencies between resources
@@ -189,16 +189,16 @@ Build the diagram following these steps:
 
 ### Step 5: Export the Diagram
 
-Use the `export-diagram` tool to retrieve the draw.io XML and save it as a file in `output/diagrams/`.
+Use the `export-diagram` tool to retrieve the draw.io XML and save it as a file in `output/{project-name}/diagrams/`.
 
 ## Deliverables
 
 | File | Content |
 |------|---------|
-| `output/diagrams/system-architecture.drawio` | System architecture diagram (main) |
-| `output/diagrams/data-flow.drawio` | Data flow diagram |
-| `output/diagrams/network-security.drawio` | Network & security diagram |
-| `output/diagrams/cicd-pipeline.drawio` | CI/CD pipeline diagram |
+| `output/{project-name}/diagrams/system-architecture.drawio` | System architecture diagram (main) |
+| `output/{project-name}/diagrams/data-flow.drawio` | Data flow diagram |
+| `output/{project-name}/diagrams/network-security.drawio` | Network & security diagram |
+| `output/{project-name}/diagrams/cicd-pipeline.drawio` | CI/CD pipeline diagram |
 
 > Diagrams can be opened and edited in draw.io Desktop or at https://app.diagrams.net.
 
@@ -210,7 +210,7 @@ Use the `export-diagram` tool to retrieve the draw.io XML and save it as a file 
 - [ ] VNet / Subnet network isolation is correctly represented
 - [ ] Diagram labels are written in Japanese
 - [ ] draw.io XML is well-formed (no syntax errors)
-- [ ] Diagram files are saved in `output/diagrams/`
+- [ ] Diagram files are saved in `output/{project-name}/diagrams/`
 
 ## Diagram Templates
 

@@ -107,9 +107,9 @@ Structure the collected information into a 6-element meta-prompt.
 
 ### Step 4: User Approval
 
-- Display the meta-prompt and **always wait** for user approval
+- Display the meta-prompt and **always wait** for user approval / ユーザー承認
 - If modifications are requested, update the relevant elements and re-display
-- After approval, save the meta-prompt to `output/meta-prompt.md`
+- 承認を得た後 (after approval), save the meta-prompt to `output/{project-name}/meta-prompt.md`
 
 ### Step 5: Handoff to Downstream Skills
 
@@ -119,7 +119,7 @@ the input context for the downstream skill as-is.
 
 ## Deliverables
 
-- `output/meta-prompt.md`: Approved 6-element meta-prompt
+- `output/{project-name}/meta-prompt.md`: Approved 6-element meta-prompt
 
 ## Quality Gates
 

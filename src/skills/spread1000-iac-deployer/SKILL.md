@@ -18,7 +18,7 @@ Generate Bicep templates and CI/CD pipelines from the Azure configuration design
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md` (Azure configuration design document)
+- `output/{project-name}/phase1-azure-architecture.md` (Azure configuration design document)
 - Azure subscription ID (at deployment time)
 - Target deployment region
 
@@ -34,17 +34,17 @@ Generate Bicep templates and CI/CD pipelines from the Azure configuration design
    - Read `references/cicd-patterns.md` when generating pipelines
    - `.github/workflows/deploy.yml`: Deployment workflow
    - `.github/workflows/validate.yml`: Bicep validation workflow
-4. **Output deliverables**: Save to `output/phase4-iac/` directory
+4. **Output deliverables**: Save to `output/{project-name}/phase4-iac/` directory
    - Reuse `assets/bicep-main-template.bicep` as starting point
 5. **Validation**: Present steps for Bicep lint and what-if execution
 
 ## Deliverables
 
-- `output/phase4-iac/main.bicep`: Main Bicep template
-- `output/phase4-iac/modules/`: Resource-specific Bicep modules
-- `output/phase4-iac/parameters/`: Environment-specific parameters
-- `output/phase4-iac/.github/workflows/deploy.yml`: Deployment pipeline
-- `output/phase4-iac/.github/workflows/validate.yml`: Validation pipeline
+- `output/{project-name}/phase4-iac/main.bicep`: Main Bicep template
+- `output/{project-name}/phase4-iac/modules/`: Resource-specific Bicep modules
+- `output/{project-name}/phase4-iac/parameters/`: Environment-specific parameters
+- `output/{project-name}/phase4-iac/.github/workflows/deploy.yml`: Deployment pipeline
+- `output/{project-name}/phase4-iac/.github/workflows/validate.yml`: Validation pipeline
 
 ## Quality Gates
 

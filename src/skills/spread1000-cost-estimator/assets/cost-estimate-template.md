@@ -1,88 +1,88 @@
-# Azure コスト見積もり書
+# Azure Cost Estimate
 
-## 1. 見積もり概要
+## 1. Estimate Overview
 
-- **対象研究**: <!-- 研究テーマ -->
-- **見積もり日**: <!-- YYYY-MM-DD -->
-- **研究期間**: 約180日間（交付決定日〜令和9年1月6日）
-- **為替レート**: 1 USD = <!-- XXX --> JPY（見積もり時点）
+- **Target Research**: <!-- Research theme -->
+- **Estimate Date**: <!-- YYYY-MM-DD -->
+- **Research Period**: Approx. 180 days (from grant award date to January 6 of the following fiscal year)
+- **Exchange Rate**: 1 USD = <!-- XXX --> JPY (at time of estimate)
 
-## 2. リソース別コスト明細
+## 2. Cost Breakdown by Resource
 
-### コンピューティング
+### Compute
 
-| リソース名 | SKU | 数量 | 月間稼働時間 | 単価/時間 (USD) | 月額 (USD) | 月額 (JPY) |
-|-----------|-----|------|-------------|----------------|-----------|-----------|
+| Resource Name | SKU | Qty | Monthly Hours | Unit Price/hr (USD) | Monthly (USD) | Monthly (JPY) |
+|--------------|-----|-----|---------------|---------------------|--------------|---------------|
 | | | | | | | |
 
-### ストレージ
+### Storage
 
-| リソース名 | SKU | 容量 | 単価/GB/月 (USD) | 月額 (USD) | 月額 (JPY) |
-|-----------|-----|------|-----------------|-----------|-----------|
+| Resource Name | SKU | Capacity | Unit Price/GB/mo (USD) | Monthly (USD) | Monthly (JPY) |
+|--------------|-----|----------|----------------------|--------------|---------------|
 | | | | | | |
 
-### ネットワーク
+### Network
 
-| リソース名 | 項目 | 月間転送量 | 単価 (USD) | 月額 (USD) | 月額 (JPY) |
-|-----------|------|----------|-----------|-----------|-----------|
+| Resource Name | Item | Monthly Transfer | Unit Price (USD) | Monthly (USD) | Monthly (JPY) |
+|--------------|------|-----------------|-----------------|--------------|---------------|
 | | | | | | |
 
-### AI サービス
+### AI Services
 
-| リソース名 | SKU | 月間利用量 | 単価 (USD) | 月額 (USD) | 月額 (JPY) |
-|-----------|-----|----------|-----------|-----------|-----------|
+| Resource Name | SKU | Monthly Usage | Unit Price (USD) | Monthly (USD) | Monthly (JPY) |
+|--------------|-----|--------------|-----------------|--------------|---------------|
 | | | | | | |
 
-### その他
+### Other
 
-| リソース名 | 項目 | 月額 (USD) | 月額 (JPY) |
-|-----------|------|-----------|-----------|
-| Key Vault | 操作費 | | |
-| Monitor | ログ取り込み | | |
+| Resource Name | Item | Monthly (USD) | Monthly (JPY) |
+|--------------|------|--------------|---------------|
+| Key Vault | Operations | | |
+| Monitor | Log Ingestion | | |
 | | | | |
 
-## 3. コストサマリー
+## 3. Cost Summary
 
-| 期間 | 金額 (USD) | 金額 (JPY) |
-|------|-----------|-----------|
-| 月額（通常利用） | | |
-| 月額（ピーク利用） | | |
-| 研究期間全体（約6ヶ月） | | |
+| Period | Amount (USD) | Amount (JPY) |
+|--------|-------------|-------------|
+| Monthly (normal usage) | | |
+| Monthly (peak usage) | | |
+| Full research period (approx. 6 months) | | |
 
-## 4. コスト最適化オプション
+## 4. Cost Optimization Options
 
-### オプション A: スポット VM 活用
+### Option A: Spot VM Utilization
 
-| 項目 | 通常価格 | スポット価格 | 削減額 | 削減率 |
-|------|---------|-----------|--------|-------|
+| Item | Regular Price | Spot Price | Savings | Savings Rate |
+|------|--------------|-----------|---------|-------------|
 | | | | | |
 
-**リスク**: プリエンプション（中断）の可能性。チェックポイント保存が必要。
+**Risk**: Possible preemption (interruption). Checkpoint saving required.
 
-### オプション B: Reserved Instance
+### Option B: Reserved Instance
 
-| 項目 | Pay-as-you-go | RI 1年 | RI 3年 | 最大削減率 |
-|------|-------------|--------|--------|----------|
+| Item | Pay-as-you-go | RI 1-year | RI 3-year | Max Savings Rate |
+|------|--------------|----------|----------|-----------------|
 | | | | | |
 
-### オプション C: シャットダウンスケジュール
+### Option C: Shutdown Schedule
 
-| 時間帯 | 稼働状態 | 節約効果 |
-|--------|---------|---------|
-| 平日 9:00-21:00 | 稼働 | - |
-| 平日 21:00-9:00 | 停止 | 約50%削減 |
-| 週末 | 停止 | 約28%削減 |
+| Time Period | Status | Savings Effect |
+|------------|--------|---------------|
+| Weekdays 9:00-21:00 | Running | - |
+| Weekdays 21:00-9:00 | Stopped | ~50% reduction |
+| Weekends | Stopped | ~28% reduction |
 
-## 5. 予算との整合性
+## 5. Budget Alignment
 
-| 項目 | 申請予算上限 | 見積もり額 | 差額 | 判定 |
-|------|-----------|----------|------|------|
-| 直接経費 | 500万円 | | | ✅/❌ |
-| 間接経費（30%） | 150万円 | | | ✅/❌ |
-| 補助金総額 | 650万円 | | | ✅/❌ |
+| Item | Budget Cap | Estimated | Difference | Verdict |
+|------|-----------|-----------|-----------|---------|
+| Direct Costs | 5,000,000 JPY | | | ✅/❌ |
+| Indirect Costs (30%) | 1,500,000 JPY | | | ✅/❌ |
+| Total Grant | 6,500,000 JPY | | | ✅/❌ |
 
-## 6. 注記
+## 6. Notes
 
-- 価格は見積もり日時点の Azure Pricing Calculator に基づく
-- 実際のコストは利用パターンにより変動する
-- Azure for Research / Academic プログラムの割引は別途申請が必要
+- Prices are based on the Azure Pricing Calculator as of the estimate date
+- Actual costs may vary depending on usage patterns
+- Azure for Research / Academic program discounts require a separate application

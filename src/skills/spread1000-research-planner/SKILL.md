@@ -37,14 +37,14 @@ Formulate the optimal AI-powered research plan for the researcher's domain.
    - Map AI methods to research challenges
    - Clarify expected outcomes and breakthroughs
    - Estimate required computational resources (GPU, storage, network, etc.)
-4. **Research Plan Generation**: Save as `output/phase0-research-plan.md`
+4. **Research Plan Generation**: Save as `output/{project-name}/phase0-research-plan.md`
    - Reuse `assets/research-plan-template.md` when producing the research plan
 5. **Review**: Verify technical feasibility of the research plan
 
 ## Deliverables
 
-- `output/phase0-research-plan.md`: AI-powered research plan (complete)
-- `output/phase0-research-survey.md`: Web research results summary
+- `output/{project-name}/phase0-research-plan.md`: AI-powered research plan (complete)
+- `output/{project-name}/phase0-research-survey.md`: Web research results summary
 
 ## Quality Gates
 

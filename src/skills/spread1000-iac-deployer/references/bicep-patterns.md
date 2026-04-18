@@ -1,30 +1,30 @@
-# Bicep パターンリファレンス
+# Bicep Pattern Reference
 
-研究基盤の Bicep テンプレート生成時に準拠するパターン集。
+Pattern catalog for generating Bicep templates for research infrastructure.
 
-## ディレクトリ構造
+## Directory Structure
 
 ```
 infra/
-├── main.bicep              # エントリーポイント
+├── main.bicep              # Entry point
 ├── modules/
 │   ├── network.bicep       # VNet, NSG, Subnets
 │   ├── storage.bicep       # Storage Account, Containers
 │   ├── keyvault.bicep      # Key Vault
 │   ├── monitoring.bicep    # Log Analytics, App Insights
 │   ├── machinelearning.bicep  # AML Workspace, Compute
-│   └── compute.bicep       # VM, Batch (必要時)
+│   └── compute.bicep       # VM, Batch (when needed)
 ├── parameters/
-│   ├── dev.bicepparam      # 開発環境
-│   ├── staging.bicepparam  # ステージング
-│   └── prod.bicepparam     # 本番環境
-└── bicepconfig.json        # Bicep 設定
+│   ├── dev.bicepparam      # Development
+│   ├── staging.bicepparam  # Staging
+│   └── prod.bicepparam     # Production
+└── bicepconfig.json        # Bicep configuration
 ```
 
-## 命名規則
+## Naming Conventions
 
-| リソースタイプ | パターン | 例 |
-|-------------|---------|-----|
+| Resource Type | Pattern | Example |
+|--------------|---------|---------|
 | Resource Group | rg-{project}-{env} | rg-myresearch-dev |
 | Storage Account | st{project}{env} | stmyresearchdev |
 | Key Vault | kv-{project}-{env} | kv-myresearch-dev |
@@ -32,16 +32,16 @@ infra/
 | ML Workspace | mlw-{project}-{env} | mlw-myresearch-dev |
 | Compute Cluster | cc-{purpose} | cc-training |
 
-## モジュール設計原則
+## Module Design Principles
 
-1. **1モジュール = 1リソースタイプ**: 関連リソースをまとめる
-2. **パラメータで差異を吸収**: 環境ごとの差はパラメータファイルで管理
-3. **出力で接続**: モジュール間の依存は output/input で明示的に接続
-4. **タグの統一**: 全リソースに共通タグを適用
+1. **1 module = 1 resource type**: Group related resources together
+2. **Parameters absorb differences**: Manage per-environment variations via parameter files
+3. **Connect via outputs**: Make inter-module dependencies explicit through output/input connections
+4. **Unified tags**: Apply common tags to all resources
 
-## セキュリティパターン
+## Security Patterns
 
-### マネージド ID
+### Managed Identity
 ```bicep
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: '${prefix}-identity'
@@ -70,7 +70,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = {
 }
 ```
 
-## GPU コンピュートクラスタ
+## GPU Compute Cluster
 
 ```bicep
 resource computeCluster 'Microsoft.MachineLearningServices/workspaces/computes@2024-04-01' = {
@@ -86,14 +86,14 @@ resource computeCluster 'Microsoft.MachineLearningServices/workspaces/computes@2
         maxNodeCount: 4
         nodeIdleTimeBeforeScaleDown: 'PT15M'
       }
-      vmPriority: 'LowPriority' // スポット VM
+      vmPriority: 'LowPriority' // Spot VM
       subnet: { id: subnetId }
     }
   }
 }
 ```
 
-## パラメータファイル例
+## Parameter File Example
 
 ```bicepparam
 using '../main.bicep'

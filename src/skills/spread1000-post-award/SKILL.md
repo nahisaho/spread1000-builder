@@ -32,13 +32,13 @@ Provide end-to-end guidance from grant application after SPReAD award to submiss
 - Awarded project title and e-Rad project number
 - Grant decision date (starting point of the research period)
 - Principal investigator information (name, affiliated institution)
-- Latest version of the research plan (reference `output/phase3-proposal.md` if available)
+- Latest version of the research plan (reference `output/{project-name}/phase3-proposal.md` if available)
 
 ## Workflow
 
 ### Step 1: Generate Post-Award Roadmap
 
-Generate a 180-day management schedule starting from the grant decision date and save to `output/post-award-roadmap.md`.
+Generate a 180-day management schedule starting from the grant decision date and save to `output/{project-name}/post-award-roadmap.md`.
 
 ```
 ■ 採択後ロードマップ（180日間）
@@ -72,7 +72,7 @@ Generate a 180-day management schedule starting from the grant decision date and
 
 ### Step 2: Grant Application Procedure Guide
 
-Guide the required procedures after the award notification. Save the following mandatory tasks to `output/grant-application-checklist.md`:
+Guide the required procedures after the award notification. Save the following mandatory tasks to `output/{project-name}/grant-application-checklist.md`:
 
 | # | Task | Responsible | Submission To | Notes |
 |---|------|-------------|---------------|-------|
@@ -85,7 +85,7 @@ Guide the required procedures after the award notification. Save the following m
 
 ### Step 3: Interim Progress Review (3-Month Mark)
 
-Create an interim progress memo at approximately 3 months from research start and save to `output/progress-report-interim.md`:
+Create an interim progress memo at approximately 3 months from research start and save to `output/{project-name}/progress-report-interim.md`:
 
 ```markdown
 # SPReAD 中間進捗メモ
@@ -128,7 +128,7 @@ Create an interim progress memo at approximately 3 months from research start an
 
 ### Step 4: Final Outcome Report Preparation
 
-Create the research outcome report at the end of the research period and save to `output/research-outcome-report.md`.
+Create the research outcome report at the end of the research period and save to `output/{project-name}/research-outcome-report.md`.
 - Read `references/acknowledgment-guide.md` when producing the acknowledgment section
 
 ```markdown
@@ -186,7 +186,7 @@ Discovery challenges Program (SPReAD) Japan Grant Number JPMXP17{{e-Rad課題番
 
 ### Step 5: Budget Change & Expense Category Reallocation Guide
 
-Guide the procedures when budget reallocation between expense categories or cost allocation changes become necessary during budget execution. Save to `output/budget-change-guide.md`:
+Guide the procedures when budget reallocation between expense categories or cost allocation changes become necessary during budget execution. Save to `output/{project-name}/budget-change-guide.md`:
 
 ```markdown
 # 予算変更・費目間流用ガイド
@@ -245,7 +245,7 @@ Guide the procedures when plan changes become necessary as research progresses:
 
 ### Step 7: Accounting Report Preparation
 
-Save the accounting report template for after the research period ends to `output/accounting-report.md`:
+Save the accounting report template for after the research period ends to `output/{project-name}/accounting-report.md`:
 
 ```markdown
 # 会計実績報告書
@@ -289,12 +289,12 @@ Save the accounting report template for after the research period ends to `outpu
 
 | File | Content |
 |------|---------|
-| `output/post-award-roadmap.md` | 180-day management schedule |
-| `output/grant-application-checklist.md` | Grant application procedure checklist |
-| `output/progress-report-interim.md` | Interim progress memo (3-month mark) |
-| `output/research-outcome-report.md` | Research outcome report (final) |
-| `output/budget-change-guide.md` | Budget change & expense reallocation guide |
-| `output/accounting-report.md` | Accounting report |
+| `output/{project-name}/post-award-roadmap.md` | 180-day management schedule |
+| `output/{project-name}/grant-application-checklist.md` | Grant application procedure checklist |
+| `output/{project-name}/progress-report-interim.md` | Interim progress memo (3-month mark) |
+| `output/{project-name}/research-outcome-report.md` | Research outcome report (final) |
+| `output/{project-name}/budget-change-guide.md` | Budget change & expense reallocation guide |
+| `output/{project-name}/accounting-report.md` | Accounting report |
 
 ## Quality Gates
 

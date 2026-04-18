@@ -54,12 +54,15 @@ DO: → `spread1000-cost-estimator`
 
 WHEN: SPReADの申請書を作成したい、研究計画書を書きたい
 DO:
-  1. `output/phase2-cost-estimate.md` の存在を確認する
+  1. `output/{project-name}/phase2-cost-estimate.md` の存在を確認する
   2. 存在しない場合 → まず `spread1000-cost-estimator` を実行（Azure Retail Prices API で最新単価取得必須）
   3. Phase 2 完了後 → `spread1000-proposal-writer`
 
 WHEN: 申請書をレビューしてほしい、研究計画調書の品質チェックをしたい、審査観点での評価が欲しい
 DO: → `proposal-reviewer` agent（読み取り専用）
+
+WHEN: 提出前の最終レビューをしたい、全フェーズの整合性を検証したい、模擬ピアレビューを受けたい、提出準備が整っているか確認したい、スコアリングしてほしい
+DO: → `spread1000-final-reviewer`
 
 WHEN: AIインタビューの準備をしたい、e-Radの手続きを知りたい、応募資格を確認したい、重複制限を知りたい、学生応募の手続き
 DO: → `spread1000-submission-guide`
@@ -70,8 +73,11 @@ DO: → `spread1000-post-award`
 WHEN: システム構成図を作りたい、アーキテクチャ図をdraw.ioで作成したい、Azure構成の図面を生成したい、データフロー図が欲しい
 DO: → `spread1000-diagram-generator`
 
-WHEN: Bicepテンプレートを生成したい、CI/CDパイプラインを構築したい、Azureリソースをデプロイしたい
+WHEN: Bicepテンプレートを生成したい、CI/CDパイプラインを構築したい、IaCコードを作りたい
 DO: → `spread1000-iac-deployer`
+
+WHEN: Azureにデプロイしたい、デプロイ手順を知りたい、OIDCフェデレーションを設定したい、デプロイ後の検証をしたい、デプロイエラーのトラブルシューティング
+DO: → `spread1000-azure-deployer`
 
 ### Task Classification
 
@@ -96,11 +102,17 @@ DO: → `spread1000-iac-deployer`
 4b. 申請書のレビュー・品質チェックが必要？
    - YES → `proposal-reviewer` agent
    - NO → next
+4c. 提出前の最終レビュー・全フェーズ横断検証・模擬ピアレビューが必要？
+   - YES → `spread1000-final-reviewer`
+   - NO → next
 5. 応募手続き（AIインタビュー・e-Rad・応募資格・重複制限）の確認が必要？
    - YES → `spread1000-submission-guide`
    - NO → next
 6. Bicep テンプレート・CI/CD パイプラインの生成が必要？
    - YES → `spread1000-iac-deployer`
+   - NO → next
+6b. 生成済み Bicep を Azure にデプロイ・OIDC 設定・デプロイ検証が必要？
+   - YES → `spread1000-azure-deployer`
    - NO → next
 7. 採択後の管理・報告（中間報告・最終報告・予算変更・論文謝辞）が必要？
    - YES → `spread1000-post-award`
@@ -115,8 +127,10 @@ Phase 1b → `spread1000-diagram-generator`: draw.io MCPによるシステム構
 Phase 2  → `spread1000-cost-estimator`: Azure構成のコスト算出・予算計画
 Phase 3  → `spread1000-proposal-writer`: SPReAD申請書の生成 ⏸️ ユーザー承認
 Phase 3b → `proposal-reviewer` agent: 申請書の品質レビュー（6審査観点） ⏸️ ユーザー確認
+Phase 3c → `spread1000-final-reviewer`: 提出前最終レビュー（全フェーズ横断検証・模擬ピアレビュースコアリング） ⏸️ ユーザー確認
 Phase 4  → `spread1000-submission-guide`: AIインタビュー準備・e-Rad手続き・応募書類チェック
 Phase 5  → `spread1000-iac-deployer`: Bicepテンプレート・CI/CDパイプライン生成
+Phase 5b → `spread1000-azure-deployer`: Azureデプロイ実行・OIDC設定・デプロイ後検証
 Phase 6  → `spread1000-post-award`: 採択後管理（交付申請・中間報告・最終報告・会計実績)
 
 ### Urgency Triage
@@ -124,7 +138,7 @@ Phase 6  → `spread1000-post-award`: 採択後管理（交付申請・中間報
 | Urgency | Keywords | Workflow |
 |---------|----------|---------|
 | Normal | (default) | Full workflow (Pre + Phase 0–6) |
-| Urgent | "急ぎ", "締切直前" | Pre + Phase 0+1b+2+3 (プラン＋図＋コスト見積＋申請書) |
+| Urgent | "急ぎ", "締切直前" | Pre + Phase 0+3 (プラン＋申請書) — 実際には Phase 0+1b+2+3 (プラン＋図＋コスト見積＋申請書) を実行 |
 | Critical | "今すぐ" | Pre + Phase 2+3 (コスト見積＋申請書) |
 
 > **⚠️ コスト見積り（Phase 2）はいかなる Urgency でもスキップ不可。** Azure Retail Prices API からの単価取得なしに申請書の経費欄を埋めてはならない。
@@ -147,7 +161,9 @@ PLAN → EXECUTE → VERIFY → REPORT → LOG
 - [ ] Azure構成が研究プランの計算要件を満たしている
 - [ ] コスト見積もりが申請予算の範囲内に収まっている
 - [ ] 申請書がSPReADの公募要領に準拠している
+- [ ] 最終レビューの総合判定が🟢（提出推奨）または🟡（改善推奨・修正済み）
 - [ ] Bicepテンプレートが構成図と一致している
+- [ ] デプロイが成功し、全リソースがプロビジョニング完了している
 - [ ] 採択後ロードマップが180日間のマイルストーンを網羅している
 
 ## Disclaimer（免責事項）

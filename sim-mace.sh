@@ -350,7 +350,7 @@ echo "  M9: Proposal Reviewer 分野横断テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-REV="agents/proposal-reviewer.md"
+REV="agents/proposal-reviewer.agent.md"
 check_keyword "$REV" "AI利活用の妥当性" "審査観点1: AI妥当性"
 check_keyword "$REV" "研究実績" "審査観点2: 研究実績"
 check_keyword "$REV" "実施計画.*資金活用\|資金活用.*妥当性" "審査観点3: 実施計画"
@@ -369,7 +369,7 @@ echo "  M10: Research Advisor 分野対応力テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-ADV="agents/research-advisor.md"
+ADV="agents/research-advisor.agent.md"
 check_keyword "$ADV" "FIELD\|研究分野" "10要素: FIELD"
 check_keyword "$ADV" "PURPOSE\|目的" "10要素: PURPOSE"
 check_keyword "$ADV" "DATA\|データ" "10要素: DATA"
@@ -420,12 +420,12 @@ check_keyword "skills/spread1000-proposal-writer/SKILL.md" "患者データ\|個
 
 echo "  ── 学生応募の特殊処理 ──"
 check_keyword "skills/spread1000-submission-guide/SKILL.md" "学生" "submission: 学生対応"
-check_keyword "agents/proposal-reviewer.md" "様式3\|様式4" "reviewer: 学生用様式"
+check_keyword "agents/proposal-reviewer.agent.md" "様式3\|様式4" "reviewer: 学生用様式"
 
 echo "  ── コンテキスト収集と後続スキルの連携 ──"
 check_keyword "skills/spread1000-context-collector/SKILL.md" "メタプロンプト" "context→メタプロンプト生成"
 check_keyword "skills/spread1000-context-collector/SKILL.md" "承認\|ユーザー.*承認" "context→ユーザー承認"
-check_keyword "skills/spread1000-context-collector/SKILL.md" "output/meta-prompt.md" "context→出力パス"
+check_keyword "skills/spread1000-context-collector/SKILL.md" "output/.*meta-prompt.md" "context→出力パス"
 
 echo "  ── Phase間データフロー ──"
 check_keyword "skills/spread1000-azure-architect/SKILL.md" "phase0-research-plan" "Phase0→1 データフロー"

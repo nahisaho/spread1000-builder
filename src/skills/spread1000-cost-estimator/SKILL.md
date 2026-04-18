@@ -18,7 +18,7 @@ Calculate costs from the Azure architecture design and generate estimates aligne
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md` (Azure architecture design)
+- `output/{project-name}/phase1-azure-architecture.md` (Azure architecture design)
 - Research period (~180 days ≈ ~6 months)
 - Estimated monthly usage hours (GPU uptime, etc.)
 
@@ -60,17 +60,17 @@ Calculate costs from the Azure architecture design and generate estimates aligne
    - **Price source** (API URL or page URL) must be recorded in the estimate document
    - **Exchange rate**: use the TTM rate as of the retrieval date, and cite the source
 3. **Cost calculation**:
-   - Monthly cost (normal usage and peak usage)
-   - Total cost for the full research period (~180 days)
+   - Monthly cost / 月額コスト (normal usage and peak usage)
+   - Total cost / 総額コスト for the full research period / 研究期間 (~180 days)
    - Comparison of cost optimization options
-   - Verify that 直接経費 fits within the ¥5M ceiling
-4. **Generate budget plan**: Save as `output/phase2-cost-estimate.md`
+   - Verify that 直接経費 fits within the 予算上限（500万円以下）
+4. **Generate budget plan**: Save as `output/{project-name}/phase2-cost-estimate.md`
    - Reuse `assets/cost-estimate-template.md` when producing the estimate
 5. **Validation**: Confirm alignment with the SPReAD budget ceiling (直接経費 ≤ ¥5M)
 
 ## Deliverables
 
-- `output/phase2-cost-estimate.md`: Cost estimate document (complete version)
+- `output/{project-name}/phase2-cost-estimate.md`: Cost estimate document (complete version)
 
 ## Quality Gates
 
@@ -96,7 +96,7 @@ Before finalizing the estimate, the following checks must be executed. **If any 
 - The Azure Retail Prices API (`prices.azure.com`) returns the latest unit prices in JSON. Default `armRegionName` to `japaneast` and adjust to the user's preferred region
 - Spot VMs offer up to 90% discount but carry preemption risk. Assume training interruption tolerance (checkpointing) is in place
 - Azure for Research program discount rates vary by application. List them as reference values, not confirmed amounts
-- Do not overlook hidden costs (data transfer, log storage, Key Vault operations)
+- Do not overlook hidden costs / 隠れコスト (データ転送, log storage, Key Vault operations)
 
 ## Validation Loop
 

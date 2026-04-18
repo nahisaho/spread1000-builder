@@ -14,11 +14,12 @@ Provide unified guidance on all procedures required for SPReAD submission (AI in
 
 ## Use This Skill When
 
-- Preparing for or learning the AI interview procedure
+- Preparing for or learning the AIインタビュー (AI interview) procedure
 - Confirming e-Rad registration and submission procedures
 - Checking eligibility requirements
 - Checking overlap restrictions (e.g., with ARiSE)
-- Learning student-specific application procedures
+- 学生応募の手続き / Learning student-specific application procedures
+- 研究インテグリティ誓約の確認 / Verifying research integrity pledge
 - Assembling the full document set (様式0–4)
 
 ## Required Inputs
@@ -35,12 +36,12 @@ Provide unified guidance on all procedures required for SPReAD submission (AI in
    - Read `references/ai-interview-guide.md` when guiding AI interview
 4. **e-Rad submission guide** — Registration confirmation, research integrity pledge, submission steps
 5. **Generate submission document checklist** — Completeness check for 様式0–4 and attachments
-6. **Output guide report** — Save as `output/submission-checklist.md`
+6. **Output guide report** — Save as `output/{project-name}/submission-checklist.md`
    - Reuse `assets/submission-checklist-template.md` when producing the checklist
 
 ## Deliverables
 
-- `output/submission-checklist.md`: Submission procedure checklist (complete version)
+- `output/{project-name}/submission-checklist.md`: Submission procedure checklist (complete version)
 
 ## Quality Gates
 

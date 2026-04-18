@@ -1,68 +1,122 @@
-# Azure 研究基盤向けサービスリファレンス
+# Azure Research Infrastructure Service Reference
 
-Azure サービス選定時に参照する。研究用途に特化したサービスと推奨構成を記載。
+Reference for Azure service selection. Lists research-oriented services and recommended configurations.
 
-## コンピューティング
+## Compute
 
-### GPU VM シリーズ（ML/DL 学習向け）
+### GPU VM Series (ML/DL Training)
 
-| シリーズ | GPU | VRAM | 用途 |
-|---------|-----|------|------|
-| NC A100 v4 | NVIDIA A100 | 80GB | 大規模モデル学習 |
-| ND H100 v5 | NVIDIA H100 | 80GB | 超大規模モデル学習 |
-| NC T4 v3 | NVIDIA T4 | 16GB | 推論・小規模学習 |
-| NV v3 | NVIDIA M60 | 8GB | 可視化・軽量推論 |
+| Series | GPU | VRAM | Use Case |
+|--------|-----|------|----------|
+| NC A100 v4 | NVIDIA A100 | 80GB | Large-scale model training |
+| ND H100 v5 | NVIDIA H100 | 80GB | Very-large-scale model training |
+| NC T4 v3 | NVIDIA T4 | 16GB | Inference / small-scale training |
+| NV v3 | NVIDIA M60 | 8GB | Visualization / lightweight inference |
 
-### コンピューティングサービス
+### HPC VM Series (MPI / Simulation)
 
-| サービス | 用途 | 推奨シナリオ |
-|---------|------|-------------|
-| Azure Machine Learning | ML ワークフロー全般 | 実験管理・モデル学習・デプロイ |
-| Azure Batch | 大規模バッチ処理 | パラメータスイープ・シミュレーション |
-| Azure CycleCloud | HPC クラスタ管理 | MPI 並列計算・伝統的HPC |
-| Azure Kubernetes Service | コンテナオーケストレーション | マイクロサービス型MLパイプライン |
+| Series | CPU | InfiniBand | Use Case |
+|--------|-----|------------|----------|
+| HB v4 | AMD EPYC 9V74 | 400 Gb/s NDR | Large-scale MPI parallel computing, weather simulation |
+| HX v4 | AMD EPYC 9V74 | 400 Gb/s NDR | Memory-intensive HPC (DFT, molecular dynamics) |
+| HB v3 | AMD EPYC 7V73X | 200 Gb/s HDR | CFD / structural simulation |
 
-## ストレージ
+### Compute Services
 
-| サービス | 用途 | 推奨シナリオ |
-|---------|------|-------------|
-| Azure Blob Storage | オブジェクトストレージ | 学習データ・モデルアーティファクト |
-| Azure Data Lake Storage Gen2 | 階層型ストレージ | 大規模データレイク |
-| Azure NetApp Files | NFS 共有ストレージ | HPC ノード間共有データ |
-| Azure Managed Lustre | 高性能並列ファイルシステム | 超大規模並列I/O |
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Azure Machine Learning | End-to-end ML workflow | Experiment tracking, model training, deployment |
+| Azure Batch | Large-scale batch processing | Parameter sweeps, simulation jobs |
+| Azure CycleCloud | HPC cluster management | MPI parallel computing, traditional HPC |
+| Azure Kubernetes Service | Container orchestration | Microservice-based ML pipelines |
 
-## AI サービス
+## Storage
 
-| サービス | 用途 | 推奨シナリオ |
-|---------|------|-------------|
-| Azure OpenAI Service | LLM API | テキスト生成・要約・分類 |
-| Azure AI Search | ベクトル検索 | 論文検索・知識ベース |
-| Azure AI Document Intelligence | 文書解析 | 論文PDF解析・データ抽出 |
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Azure Blob Storage | Object storage | Training data, model artifacts |
+| Azure Data Lake Storage Gen2 | Hierarchical storage | Large-scale data lake |
+| Azure NetApp Files | NFS shared storage | Shared data across HPC nodes |
+| Azure Managed Lustre | High-performance parallel file system | Ultra-large-scale parallel I/O |
 
-## 分野特化データ基盤
+## AI Services
 
-| サービス | 用途 | 推奨シナリオ |
-|---------|------|-------------|
-| Azure Health Data Services (DICOM) | 医用画像保存・検索 | CT/MRI/X線の AI 解析研究 |
-| Azure Health Data Services (FHIR) | 臨床データ標準化 | 患者情報・検査結果の研究活用 |
-| De-identification service | 臨床テキスト匿名化 | PHI 除去・HIPAA 準拠 |
-| Microsoft Planetary Computer | 地球環境データ分析 | 衛星画像・気候・生物多様性データ |
-| Azure Trusted Research Environment | セキュアリサーチ基盤 | 機密データ（臨床・ゲノム等）の安全な分析環境 |
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Azure OpenAI Service | LLM API | Text generation, summarization, classification |
+| Azure AI Search | Vector search | Literature search, knowledge base |
+| Azure AI Document Intelligence | Document analysis | Research paper PDF parsing, data extraction |
+| [Microsoft GraphRAG](https://github.com/microsoft/graphrag) | Knowledge graph + RAG | Structured insight extraction from knowledge graphs, discovery of inter-literature relationships |
 
-## ネットワーク
+### AI for Science Foundation Models (Microsoft Foundry)
 
-| サービス | 用途 |
-|---------|------|
-| Azure Virtual Network | ネットワーク分離 |
-| Azure Private Endpoint | プライベート接続 |
-| Azure Bastion | セキュアなVM接続 |
-| Azure ExpressRoute | オンプレミス接続（大学ネットワーク） |
+Models developed by Microsoft Research AI for Science, deployable from the [Azure AI Foundry](https://ai.azure.com/) model catalog. Purpose-built for scientific research.
 
-## セキュリティ・ガバナンス
+| Model | Domain | Purpose | Recommended Scenario |
+|-------|--------|---------|----------------------|
+| [Aurora](https://ai.azure.com/explore/models/Aurora/version/4/registry/azureml) | Earth science / meteorology | Large-scale atmospheric foundation model | Weather forecasting, atmospheric simulation, climate change research |
+| [BioEmu](https://ai.azure.com/explore/models/BioEmu/version/2/registry/azureml) | Life science | Biomolecular emulation | Protein dynamics simulation, drug discovery |
+| [MatterGen](https://ai.azure.com/explore/models/MatterGen/version/1/registry/azureml-msr) | Materials science | Generative AI for novel material design | Generating new materials with desired properties, materials exploration |
+| [MatterSim](https://ai.azure.com/explore/models/MatterSim/version/1/registry/azureml-msr) | Materials science | Materials property simulation | Physical property prediction, molecular dynamics simulation |
+| [NatureLM](https://naturelm.github.io/) | Cross-domain (chemistry, life science, materials) | Natural-language-driven scientific entity generation | Drug discovery (ligand design, binding affinity optimization), protein design, materials design, RNA design |
+| [TamGen](https://www.microsoft.com/en-us/research/blog/accelerating-drug-discovery-with-tamgen-a-generative-ai-approach-to-target-aware-molecule-generation/) | Chemistry / drug discovery | Target-aware molecule generation | Automated candidate molecule design from target protein 3D structure, lead compound exploration |
+| [Skala (DFT)](https://www.microsoft.com/en-us/research/project/dft/use-skala/) | Computational chemistry / materials | Deep-learning-based exchange-correlation functional | Achieving chemical accuracy (~1 kcal/mol) in DFT calculations, improving prediction accuracy for molecular/materials design |
+| [AI2BMD](https://www.microsoft.com/en-us/research/blog/from-static-prediction-to-dynamic-characterization-ai2bmd-advances-protein-dynamics-with-ab-initio-accuracy/) | Life science | Ab initio accuracy biomolecular dynamics | High-speed computation of protein dynamics at first-principles accuracy |
 
-| サービス | 用途 |
-|---------|------|
-| Azure Key Vault | シークレット管理 |
-| Microsoft Entra ID | ID管理・RBAC |
-| Azure Policy | コンプライアンス |
-| Microsoft Defender for Cloud | セキュリティ監視 |
+## Data Analytics Platform
+
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Microsoft Fabric | Unified data analytics platform | Centralized data lake, data warehouse, real-time analytics, and ML |
+| Microsoft Fabric — Data Engineering | Spark-based large-scale data processing | Research data preprocessing, ETL, feature engineering |
+| Microsoft Fabric — Data Science | Notebooks + MLflow experiment management | Model training, experiment tracking, model registry |
+| Microsoft Fabric — Real-Time Intelligence | Streaming data analytics | IoT sensor data, real-time monitoring |
+| Microsoft Fabric — Data Warehouse | T-SQL analytical queries | Structured research data aggregation and reporting |
+| Microsoft Fabric — OneLake | Unified data lake storage | Centralized research data management (Delta Parquet format) |
+| Azure Databricks | Apache Spark analytics | Large-scale data processing, ML pipelines, feature engineering |
+
+## Domain-Specific Data Platforms
+
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Azure Health Data Services (DICOM) | Medical imaging storage and retrieval | AI analysis of CT/MRI/X-ray images |
+| Azure Health Data Services (FHIR) | Clinical data standardization | Research use of patient records and lab results |
+| De-identification service | Clinical text de-identification | PHI removal, HIPAA compliance |
+| Microsoft Planetary Computer | Geospatial and environmental data analytics | Satellite imagery, climate, biodiversity data |
+| Azure Trusted Research Environment | Secure research platform | Safe analysis of sensitive data (clinical, genomic, etc.) |
+
+## Networking
+
+| Service | Use Case |
+|---------|----------|
+| Azure Virtual Network | Network isolation |
+| Azure Private Endpoint | Private connectivity |
+| Azure Bastion | Secure VM access |
+| Azure ExpressRoute | On-premises connectivity (university networks) |
+| InfiniBand (NDR/HDR) | RDMA high-speed interconnect between HPC VMs (MPI parallel jobs) |
+
+## Security & Governance
+
+| Service | Use Case |
+|---------|----------|
+| Azure Key Vault | Secret management |
+| Microsoft Entra ID | Identity management / RBAC |
+| Azure Policy | Compliance |
+| Microsoft Defender for Cloud | Security monitoring |
+
+## NVIDIA Domain-Specific Frameworks (Run on Azure GPU VMs)
+
+| Framework | Domain | Purpose | Recommended Scenario |
+|-----------|--------|---------|----------------------|
+| NVIDIA BioNeMo | Life science / drug discovery | Bio-AI model training platform | Training and fine-tuning ESM-2 (protein), MolMIM (molecule generation), DiffDock (docking) |
+| NVIDIA Modulus | Physics simulation | Physics-informed AI | Accelerating CFD, thermal, and structural simulations with PINNs and FNOs |
+| NVIDIA Clara | Medical AI | Medical imaging / genomics AI | Medical imaging workflows, genomic analysis, MONAI integration |
+| MONAI | Medical imaging AI | Medical image segmentation / classification | CT/MRI segmentation, lesion detection, Azure ML integration |
+
+## Additional AI for Science Services
+
+| Service | Use Case | Recommended Scenario |
+|---------|----------|----------------------|
+| Azure AI Language | NLP text analytics | Sentiment analysis, named entity recognition, text classification (social science, humanities) |
+| Azure AI Speech | Speech recognition / synthesis | Interview transcription, multilingual support (qualitative research) |
+| Azure Quantum | Quantum computing | Quantum chemistry calculations, quantum optimization (materials science, physics) |

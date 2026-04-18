@@ -1,10 +1,10 @@
-# CI/CD パイプラインパターンリファレンス
+# CI/CD Pipeline Pattern Reference
 
-GitHub Actions による Azure デプロイ CI/CD パイプラインのパターン集。
+Pattern catalog for Azure deployment CI/CD pipelines using GitHub Actions.
 
-## 認証方式
+## Authentication Method
 
-### 推奨: OpenID Connect (OIDC) フェデレーション
+### Recommended: OpenID Connect (OIDC) Federation
 
 ```yaml
 permissions:
@@ -19,9 +19,9 @@ steps:
       subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 ```
 
-**非推奨**: `AZURE_CREDENTIALS` シークレットによるサービスプリンシパル認証
+**Not recommended**: Service principal authentication via `AZURE_CREDENTIALS` secret
 
-## デプロイワークフロー
+## Deployment Workflow
 
 ```yaml
 name: Deploy Azure Infrastructure
@@ -80,7 +80,7 @@ jobs:
             --parameters infra/parameters/${{ inputs.environment || 'dev' }}.bicepparam
 ```
 
-## 検証ワークフロー
+## Validation Workflow
 
 ```yaml
 name: Validate Bicep
@@ -109,16 +109,16 @@ jobs:
             --parameters infra/parameters/dev.bicepparam
 ```
 
-## 必要な GitHub Secrets
+## Required GitHub Secrets
 
-| シークレット名 | 説明 |
-|-------------|------|
-| AZURE_CLIENT_ID | サービスプリンシパルのクライアント ID |
-| AZURE_TENANT_ID | Azure AD テナント ID |
-| AZURE_SUBSCRIPTION_ID | Azure サブスクリプション ID |
+| Secret Name | Description |
+|-------------|-------------|
+| AZURE_CLIENT_ID | Service principal client ID |
+| AZURE_TENANT_ID | Azure AD tenant ID |
+| AZURE_SUBSCRIPTION_ID | Azure subscription ID |
 
-## 必要な GitHub Variables
+## Required GitHub Variables
 
-| 変数名 | 説明 |
-|--------|------|
-| RESOURCE_GROUP | デプロイ先のリソースグループ名 |
+| Variable Name | Description |
+|---------------|-------------|
+| RESOURCE_GROUP | Target resource group name |

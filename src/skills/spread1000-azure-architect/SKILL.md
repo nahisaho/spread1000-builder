@@ -21,20 +21,14 @@ Design the optimal Microsoft Azure architecture for the research plan.
 
 ## Required Inputs
 
-- `output/phase0-research-plan.md` (research plan)
+- `output/{project-name}/phase0-research-plan.md` (research plan)
 - Estimated computational resources needed for the research
 - Data type, size, and access patterns
 
 ## Workflow
 
 1. **Research Plan Analysis**: Extract computational and data requirements
-2. **Azure Service Selection**: Select optimal services from the following perspectives:
-   - Read `references/azure-research-services.md` when selecting Azure services
-   - Compute: Azure Machine Learning, Azure Batch, Azure HPC (NC/ND series)
-   - Storage: Azure Blob Storage, Azure Data Lake, Azure NetApp Files
-   - Data Processing: Azure Databricks, Azure Synapse Analytics
-   - AI Services: Azure OpenAI Service, Azure AI Services
-   - Network: Azure Virtual Network, ExpressRoute
+2. **Azure Service Selection**: Read `references/azure-research-services.md` as the single source of truth for available services, then select the optimal combination covering Compute, Storage, AI Services, Data Analytics, Networking, and Security
 3. **Architecture Design**:
    - Create component diagram (Mermaid)
    - Create data flow diagram
@@ -48,7 +42,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
    - Operational Excellence: IaC, MLOps pipeline, monitoring
    - Performance Efficiency: GPU utilization, region placement, IOPS
    - `fetch` WAF Service Guides for each service to verify latest recommended configurations
-5. **Design Document Generation**: Save as `output/phase1-azure-architecture.md`
+5. **Design Document Generation**: Save as `output/{project-name}/phase1-azure-architecture.md`
    - Reuse `assets/architecture-template.md` when producing the design document
    - Include WAF validation results as a "WAF Best Practices Compliance" section in the design document
 6. **Final Verification**: Confirm the design meets research plan requirements
@@ -58,7 +52,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
 
 ## Deliverables
 
-- `output/phase1-azure-architecture.md`: Azure architecture design document (complete)
+- `output/{project-name}/phase1-azure-architecture.md`: Azure architecture design document (complete)
 - Architecture diagram (embedded in Mermaid format within the design document)
 
 ## Quality Gates
@@ -74,7 +68,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
 
 ## Gotchas
 
-- Azure GPU VMs (NC series, ND series) have significantly different availability by region. Always verify availability in Japan East
+- Azure GPU VMs (NC series, ND series) have significantly different availability by region. Always verify availability in Japan East（リージョンによる GPU VM 可用性を必ず事前確認すること）
 - Azure Machine Learning compute clusters and compute instances serve different purposes. Use clusters for training, instances for development
 - Select Azure Blob Storage access tiers (Hot/Cool/Archive) appropriately based on data access frequency
 - Check whether Azure Sponsorship / Academic Grant for academic research is available
