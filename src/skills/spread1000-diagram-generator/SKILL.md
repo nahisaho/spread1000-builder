@@ -1,44 +1,44 @@
 ---
 name: spread1000-diagram-generator
 description: |
-  draw.io MCP Server（simonkurtz-MSFT）を使用して、Azure 研究基盤のシステム構成図・データフロー図・
-  ネットワーク図を draw.io 形式で生成する。700+ の Azure 公式アイコンが内蔵されており、
-  search-shapes でファジー検索して取得できる。
-  Phase 1（azure-architect）の設計書から視覚的なアーキテクチャ図を自動作成する。
-  Use when システム構成図を作りたい、アーキテクチャ図を draw.io で作成したい、
-  Azure 構成の図面を生成したい、データフロー図が欲しい場合。
+  Generate Azure research infrastructure system architecture diagrams, data flow diagrams, and
+  network diagrams in draw.io format using the draw.io MCP Server (simonkurtz-MSFT).
+  700+ official Azure icons are built in and can be retrieved via fuzzy search with search-shapes.
+  Automatically creates visual architecture diagrams from the Phase 1 (azure-architect) design document.
+  Use when you want to create system architecture diagrams, draw.io architecture diagrams,
+  Azure configuration diagrams, or data flow diagrams.
 ---
 
 # Diagram Generator
 
-[draw.io MCP Server（simonkurtz-MSFT）](https://github.com/simonkurtz-MSFT/drawio-mcp-server)を活用して、Azure 研究基盤のプロフェッショナルなシステム構成図を生成する。700+ の Azure 公式アイコン内蔵、ブラウザ不要。
+Generate professional system architecture diagrams for Azure research infrastructure using the [draw.io MCP Server (simonkurtz-MSFT)](https://github.com/simonkurtz-MSFT/drawio-mcp-server). 700+ official Azure icons built in, no browser required.
 
 ## Use This Skill When
 
-- Azure 構成設計書（Phase 1）からシステム構成図を作りたい
-- 申請書に添付するアーキテクチャ図を draw.io 形式で作りたい
-- データフロー図・ネットワーク構成図が必要
-- Mermaid では表現しきれない詳細な図面が必要
+- You want to create a system architecture diagram from the Azure configuration design document (Phase 1)
+- You want to create an architecture diagram in draw.io format for the proposal
+- You need data flow diagrams or network configuration diagrams
+- You need detailed diagrams that Mermaid cannot fully express
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md`（Azure 構成設計書）
-- 図の種類の指定（システム構成図 / データフロー図 / ネットワーク図 / セキュリティ図）
+- `output/phase1-azure-architecture.md` (Azure configuration design document)
+- Diagram type specification (system architecture / data flow / network / security)
 
 ## Prerequisites
 
-### draw.io MCP Server のセットアップ
+### Setting Up the draw.io MCP Server
 
-[simonkurtz-MSFT/drawio-mcp-server](https://github.com/simonkurtz-MSFT/drawio-mcp-server) を以下のいずれかの方法でセットアップする:
+Set up [simonkurtz-MSFT/drawio-mcp-server](https://github.com/simonkurtz-MSFT/drawio-mcp-server) using one of the following methods:
 
-#### 方法 1: Docker（推奨）
+#### Method 1: Docker (Recommended)
 
 ```bash
 docker pull simonkurtzmsft/drawio-mcp-server:latest
 docker run -d --name drawio-mcp-server -p 8080:8080 simonkurtzmsft/drawio-mcp-server:latest
 ```
 
-VS Code の `.vscode/mcp.json` に追加:
+Add to VS Code `.vscode/mcp.json`:
 
 ```json
 {
@@ -50,7 +50,7 @@ VS Code の `.vscode/mcp.json` に追加:
 }
 ```
 
-#### 方法 2: ソースから実行（Deno v2.3+ 必要）
+#### Method 2: Run from Source (Deno v2.3+ required)
 
 ```bash
 git clone https://github.com/simonkurtz-MSFT/drawio-mcp-server.git
@@ -58,7 +58,7 @@ cd drawio-mcp-server
 deno run --allow-net --allow-read --allow-env src/index.ts
 ```
 
-VS Code の `.vscode/mcp.json` に追加:
+Add to VS Code `.vscode/mcp.json`:
 
 ```json
 {
@@ -76,147 +76,147 @@ VS Code の `.vscode/mcp.json` に追加:
 
 ## MCP Tools
 
-### シェイプ検索
+### Shape Search
 
-| ツール | 用途 |
-|--------|------|
-| `search-shapes` | Azure 公式アイコン 700+ 件をファジー検索し、正確な style 文字列を取得 |
-| `get-shape-categories` | シェイプカテゴリ一覧（General, Flowchart, Azure カテゴリ）を取得 |
-| `get-shapes-in-category` | カテゴリ内の全シェイプを取得 |
-| `get-style-presets` | Azure/フローチャート等の組み込みスタイルプリセットを取得 |
+| Tool | Purpose |
+|------|---------|
+| `search-shapes` | Fuzzy search 700+ official Azure icons and retrieve exact style strings |
+| `get-shape-categories` | Get shape category list (General, Flowchart, Azure categories) |
+| `get-shapes-in-category` | Get all shapes in a category |
+| `get-style-presets` | Get built-in style presets for Azure/flowchart etc. |
 
-### 図の操作
+### Diagram Operations
 
-| ツール | 用途 |
-|--------|------|
-| `add-cells` | 頂点・エッジを一括追加。`shape_name` でアイコン解決、`temp_id` でバッチ内参照が可能 |
-| `edit-cells` | セルのプロパティ（位置・サイズ・テキスト・スタイル）を更新 |
-| `edit-edges` | エッジのプロパティ（テキスト・接続先・スタイル）を更新 |
-| `delete-cell-by-id` | セルを ID で削除（頂点の場合は接続エッジも自動削除） |
-| `create-groups` | グループ/コンテナ（VNet, Subnet, Resource Group 等）を作成 |
-| `add-cells-to-group` | セルをグループに追加 |
-| `remove-cell-from-group` | セルをグループから除外 |
+| Tool | Purpose |
+|------|---------|
+| `add-cells` | Batch-add vertices and edges. Icon resolution via `shape_name`, intra-batch references via `temp_id` |
+| `edit-cells` | Update cell properties (position, size, text, style) |
+| `edit-edges` | Update edge properties (text, connections, style) |
+| `delete-cell-by-id` | Delete a cell by ID (connected edges are auto-deleted for vertices) |
+| `create-groups` | Create groups/containers (VNet, Subnet, Resource Group, etc.) |
+| `add-cells-to-group` | Add cells to a group |
+| `remove-cell-from-group` | Remove a cell from a group |
 
-### 図の出力・管理
+### Diagram Export & Management
 
-| ツール | 用途 |
-|--------|------|
-| `export-diagram` | draw.io XML としてエクスポート |
-| `import-diagram` | draw.io XML をインポート（現在の図を置換） |
-| `clear-diagram` | 全セルをクリアしリセット |
-| `list-paged-model` | 全セルのページネーション表示 |
-| `get-diagram-stats` | セル数・境界・レイヤー分布の統計 |
+| Tool | Purpose |
+|------|---------|
+| `export-diagram` | Export as draw.io XML |
+| `import-diagram` | Import draw.io XML (replaces current diagram) |
+| `clear-diagram` | Clear all cells and reset |
+| `list-paged-model` | Paginated view of all cells |
+| `get-diagram-stats` | Statistics on cell count, bounds, layer distribution |
 
-### レイヤー・ページ管理
+### Layer & Page Management
 
-| ツール | 用途 |
-|--------|------|
-| `create-layer` / `list-layers` | レイヤーの作成・一覧 |
-| `create-page` / `list-pages` | マルチページ管理 |
+| Tool | Purpose |
+|------|---------|
+| `create-layer` / `list-layers` | Create and list layers |
+| `create-page` / `list-pages` | Multi-page management |
 
-> ⚠️ **パフォーマンス Tips**: `add-cells` は配列を受け付ける。全セルを**1回の呼び出し**で追加すること。ツールを繰り返し呼ぶのは非効率。
+> ⚠️ **Performance Tips**: `add-cells` accepts arrays. Add all cells in **a single call**. Calling the tool repeatedly is inefficient.
 
 ## Workflow
 
-### Step 1: 構成設計書の解析
+### Step 1: Parse the Configuration Design Document
 
-`output/phase1-azure-architecture.md` から以下を抽出する:
+Extract the following from `output/phase1-azure-architecture.md`:
 
-- 全 Azure リソースとその種類（VM, Storage, VNet, Key Vault 等）
-- リソース間の接続・依存関係
-- ネットワーク構成（VNet, Subnet, NSG, Private Endpoint）
-- データフロー（入力 → 処理 → 出力）
+- All Azure resources and their types (VM, Storage, VNet, Key Vault, etc.)
+- Connections and dependencies between resources
+- Network configuration (VNet, Subnet, NSG, Private Endpoint)
+- Data flow (input → processing → output)
 
-### Step 2: Azure アイコンの取得
+### Step 2: Retrieve Azure Icons
 
-`search-shapes` ツールで Azure 公式アイコンの style 文字列を取得する。
+Use the `search-shapes` tool to retrieve official Azure icon style strings.
 
 ```
-# 検索例（ファジー検索対応）
+# Search examples (fuzzy search supported)
 search-shapes(queries: ["Azure Virtual Machine", "Azure Blob Storage", "Azure Key Vault", "Azure Machine Learning", "Azure Virtual Network", "Azure AI"])
 ```
 
-> ⚠️ Azure 構成図では**必ず `search-shapes` を使用**して公式アイコンを取得すること。
-> 汎用の矩形で代替しない。`add-cells` の `shape_name` パラメータでもアイコン解決が可能。
+> ⚠️ For Azure architecture diagrams, **always use `search-shapes`** to retrieve official icons.
+> Do not substitute with generic rectangles. Icon resolution is also available via the `shape_name` parameter in `add-cells`.
 
-### Step 3: 図面タイプの選定と生成
+### Step 3: Select Diagram Type and Generate
 
-研究基盤で必要となる図面タイプ:
+Diagram types needed for research infrastructure:
 
-#### 3a. システム構成図（メイン）
+#### 3a. System Architecture Diagram (Main)
 
-全 Azure リソースとその関係を俯瞰する図。申請書 §4「研究基盤計画」に添付する。
+An overview diagram of all Azure resources and their relationships. Attached to proposal §4「研究基盤計画」.
 
-構成要素:
-- リソースグループ（コンテナ）
-- VNet / Subnet（ネストコンテナ）
-- コンピューティング（GPU VM, HPC VM, Azure ML）
-- ストレージ（Blob, Managed Lustre）
-- セキュリティ（Key Vault, NSG）
-- AI サービス（AI Foundry, OpenAI）
-- モニタリング（Log Analytics, App Insights）
+Components:
+- Resource Group (container)
+- VNet / Subnet (nested containers)
+- Compute (GPU VM, HPC VM, Azure ML)
+- Storage (Blob, Managed Lustre)
+- Security (Key Vault, NSG)
+- AI Services (AI Foundry, OpenAI)
+- Monitoring (Log Analytics, App Insights)
 
-#### 3b. データフロー図
+#### 3b. Data Flow Diagram
 
-研究データの流れを示す図。申請書 §3「研究計画・方法論」に添付する。
+A diagram showing the flow of research data. Attached to proposal §3「研究計画・方法論」.
 
 ```
 データ取得 → 前処理 → 学習 → 推論 → 結果保存 → 可視化
 ```
 
-#### 3c. ネットワーク・セキュリティ図
+#### 3c. Network & Security Diagram
 
-VNet 内のネットワーク分離とアクセス制御を示す図。
+A diagram showing network isolation and access control within the VNet.
 
-#### 3d. CI/CD パイプライン図
+#### 3d. CI/CD Pipeline Diagram
 
-Phase 5（iac-deployer）の Bicep デプロイフローを示す図。
+A diagram showing the Bicep deployment flow from Phase 5 (iac-deployer).
 
-### Step 4: 図面の構築
+### Step 4: Build the Diagram
 
-以下の手順で図を構築する:
+Build the diagram following these steps:
 
-1. **グループ/コンテナの作成**: `create-groups` で Resource Group → VNet → Subnet のネスト構造を作成
-2. **セルの一括追加**: `add-cells` で全リソースノードとエッジを1回の呼び出しで追加
-   - `shape_name` パラメータで Azure アイコンを直接指定可能
-   - `temp_id` で同バッチ内のセル間参照が可能
-3. **グループへの配置**: `add-cells-to-group` でセルを適切なコンテナに配置
-4. **調整**: 必要に応じて `edit-cells` / `edit-edges` で位置・スタイルを調整
+1. **Create groups/containers**: Use `create-groups` to create nested structures: Resource Group → VNet → Subnet
+2. **Batch-add cells**: Use `add-cells` to add all resource nodes and edges in a single call
+   - Specify Azure icons directly via the `shape_name` parameter
+   - Use `temp_id` for intra-batch cell references
+3. **Place into groups**: Use `add-cells-to-group` to place cells into appropriate containers
+4. **Adjust**: Use `edit-cells` / `edit-edges` to adjust position and style as needed
 
 - Read `references/drawio-xml-guide.md` when building diagrams
-- リジッドグリッドに従う: x = col × 180 + 40, y = row × 120 + 40
-- コンテナ（VNet, Subnet, Resource Group）はネスト構造で表現
+- Follow a rigid grid: x = col × 180 + 40, y = row × 120 + 40
+- Represent containers (VNet, Subnet, Resource Group) as nested structures
 
-### Step 5: 図面の出力
+### Step 5: Export the Diagram
 
-`export-diagram` ツールで draw.io XML を取得し、`output/diagrams/` にファイルとして保存する。
+Use the `export-diagram` tool to retrieve the draw.io XML and save it as a file in `output/diagrams/`.
 
 ## Deliverables
 
-| ファイル | 内容 |
-|----------|------|
-| `output/diagrams/system-architecture.drawio` | システム構成図（メイン） |
-| `output/diagrams/data-flow.drawio` | データフロー図 |
-| `output/diagrams/network-security.drawio` | ネットワーク・セキュリティ図 |
-| `output/diagrams/cicd-pipeline.drawio` | CI/CD パイプライン図 |
+| File | Content |
+|------|---------|
+| `output/diagrams/system-architecture.drawio` | System architecture diagram (main) |
+| `output/diagrams/data-flow.drawio` | Data flow diagram |
+| `output/diagrams/network-security.drawio` | Network & security diagram |
+| `output/diagrams/cicd-pipeline.drawio` | CI/CD pipeline diagram |
 
-> 図面は draw.io Desktop または https://app.diagrams.net で開いて編集可能。
+> Diagrams can be opened and edited in draw.io Desktop or at https://app.diagrams.net.
 
 ## Quality Gates
 
-- [ ] 全 Azure リソースが構成設計書（Phase 1）と一致している
-- [ ] Azure 公式アイコンが `search-shapes` で取得され使用されている
-- [ ] リソース間の接続関係が正確に描画されている
-- [ ] VNet / Subnet のネットワーク分離が正しく表現されている
-- [ ] 図のラベルが日本語で記述されている
-- [ ] draw.io XML が well-formed（構文エラーなし）
-- [ ] 図面ファイルが `output/diagrams/` に保存されている
+- [ ] All Azure resources match the configuration design document (Phase 1)
+- [ ] Official Azure icons are retrieved via `search-shapes` and used
+- [ ] Connections between resources are accurately drawn
+- [ ] VNet / Subnet network isolation is correctly represented
+- [ ] Diagram labels are written in Japanese
+- [ ] draw.io XML is well-formed (no syntax errors)
+- [ ] Diagram files are saved in `output/diagrams/`
 
 ## Diagram Templates
 
-### Azure 研究基盤 — 構築手順テンプレート
+### Azure Research Infrastructure — Construction Procedure Template
 
-#### 1. グループ/コンテナの作成
+#### 1. Create Groups/Containers
 
 ```json
 // create-groups
@@ -239,7 +239,7 @@ Phase 5（iac-deployer）の Bicep デプロイフローを示す図。
 }
 ```
 
-#### 2. セルの一括追加
+#### 2. Batch-Add Cells
 
 ```json
 // add-cells
@@ -271,7 +271,7 @@ Phase 5（iac-deployer）の Bicep デプロイフローを示す図。
 }
 ```
 
-#### 3. グループへの配置
+#### 3. Place into Groups
 
 ```json
 // add-cells-to-group
@@ -283,28 +283,28 @@ Phase 5（iac-deployer）の Bicep デプロイフローを示す図。
 
 ## Gotchas
 
-- `search-shapes` は 700+ の Azure アイコンをファジー検索可能。`"Azure Virtual Machine"` のようにサービス名で検索する
-- `add-cells` は配列を受け付ける — 全セルを1回の呼び出しで追加し、ツールを繰り返し呼ばない
-- draw.io XML の `value` 属性に HTML タグを含める場合は `html=1` を style に追加し、`<` → `&lt;` 等のエスケープが必要
-- コンテナ内のノードは `add-cells-to-group` でグループに追加する
-- draw.io Desktop がない環境では https://app.diagrams.net で `.drawio` ファイルを開ける
-- PNG/SVG/PDF 変換が必要な場合は jgraph の `skill-cli` を使用: https://github.com/jgraph/drawio-mcp/blob/main/skill-cli/README.md
+- `search-shapes` can fuzzy search 700+ Azure icons. Search by service name like `"Azure Virtual Machine"`
+- `add-cells` accepts arrays — add all cells in a single call, do not call the tool repeatedly
+- When including HTML tags in the draw.io XML `value` attribute, add `html=1` to the style and escape characters like `<` → `&lt;`
+- Nodes inside containers must be added to the group via `add-cells-to-group`
+- If draw.io Desktop is not available, `.drawio` files can be opened at https://app.diagrams.net
+- If PNG/SVG/PDF conversion is needed, use jgraph's `skill-cli`: https://github.com/jgraph/drawio-mcp/blob/main/skill-cli/README.md
 
 ## Security Guardrails
 
-- 図面に実際の IP アドレス・サブスクリプション ID・シークレットを含めない。プレースホルダーを使用する
-- 機密性の高い研究データのパスは汎化して表記する
+- Do not include actual IP addresses, subscription IDs, or secrets in diagrams. Use placeholders
+- Generalize paths for sensitive research data
 
 ## Validation Loop
 
-1. draw.io XML を生成する
+1. Generate the draw.io XML
 2. Check:
-   - XML が well-formed（パース可能）か
-   - 全リソースが Phase 1 構成設計書に含まれるか
-   - Azure アイコンが正しく使用されているか
-   - コンテナのネスト構造が正しいか
+   - Is the XML well-formed (parseable)?
+   - Are all resources included in the Phase 1 configuration design document?
+   - Are Azure icons used correctly?
+   - Is the container nesting structure correct?
 3. If any check fails:
-   - XML を修正し再生成
-   - `search_shapes` で正しい shape を再取得
-   - 再検証する
-4. 全ゲートをパスした後のみ成果物を最終化する
+   - Fix the XML and regenerate
+   - Re-retrieve the correct shape via `search_shapes`
+   - Re-validate
+4. Finalize deliverables only after all gates pass

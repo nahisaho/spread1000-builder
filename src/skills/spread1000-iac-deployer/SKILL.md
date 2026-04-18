@@ -1,83 +1,83 @@
 ---
 name: spread1000-iac-deployer
 description: |
-  Azure 構成設計書に基づいて Bicep テンプレートと GitHub Actions CI/CD パイプラインを
-  生成する。研究基盤のインフラをコードとして管理し、再現可能なデプロイを実現する。
-  Use when Bicepテンプレートを生成したい、CI/CDを構築したい、IaCを整備したい場合。
+  Generate Bicep templates and GitHub Actions CI/CD pipelines based on the Azure configuration
+  design document. Manage research infrastructure as code and enable reproducible deployments.
+  Use when you want to generate Bicep templates, build CI/CD, or set up IaC.
 ---
 
 # IaC Deployer
 
-Azure 構成設計書から Bicep テンプレートと CI/CD パイプラインを生成し、研究基盤のインフラをコード化する。
+Generate Bicep templates and CI/CD pipelines from the Azure configuration design document to codify research infrastructure.
 
 ## Use This Skill When
 
-- Azure 構成設計が完了しインフラをコード化する段階
-- Bicep テンプレートを生成して Azure リソースをデプロイしたい
-- GitHub Actions で CI/CD パイプラインを構築したい
+- Azure configuration design is complete and ready to codify infrastructure
+- You want to generate Bicep templates to deploy Azure resources
+- You want to build CI/CD pipelines with GitHub Actions
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md`（Azure 構成設計書）
-- Azure サブスクリプション ID（デプロイ時）
-- デプロイ先リージョン
+- `output/phase1-azure-architecture.md` (Azure configuration design document)
+- Azure subscription ID (at deployment time)
+- Target deployment region
 
 ## Workflow
 
-1. **構成設計書の解析**: デプロイ対象のリソース一覧を抽出する
-2. **Bicep テンプレート生成**:
+1. **Parse the configuration design document**: Extract the list of resources to deploy
+2. **Generate Bicep templates**:
    - Read `references/bicep-patterns.md` when generating templates
-   - `main.bicep`: エントリーポイント
-   - `modules/`: リソースタイプ別のモジュール
-   - `parameters/`: 環境別パラメータファイル
-3. **CI/CD パイプライン生成**:
+   - `main.bicep`: Entry point
+   - `modules/`: Modules organized by resource type
+   - `parameters/`: Environment-specific parameter files
+3. **Generate CI/CD pipelines**:
    - Read `references/cicd-patterns.md` when generating pipelines
-   - `.github/workflows/deploy.yml`: デプロイワークフロー
-   - `.github/workflows/validate.yml`: Bicep 検証ワークフロー
-4. **成果物出力**: `output/phase4-iac/` ディレクトリに保存
+   - `.github/workflows/deploy.yml`: Deployment workflow
+   - `.github/workflows/validate.yml`: Bicep validation workflow
+4. **Output deliverables**: Save to `output/phase4-iac/` directory
    - Reuse `assets/bicep-main-template.bicep` as starting point
-5. **検証**: Bicep lint、what-if 実行の手順を提示
+5. **Validation**: Present steps for Bicep lint and what-if execution
 
 ## Deliverables
 
-- `output/phase4-iac/main.bicep`: メイン Bicep テンプレート
-- `output/phase4-iac/modules/`: リソース別 Bicep モジュール
-- `output/phase4-iac/parameters/`: 環境別パラメータ
-- `output/phase4-iac/.github/workflows/deploy.yml`: デプロイパイプライン
-- `output/phase4-iac/.github/workflows/validate.yml`: 検証パイプライン
+- `output/phase4-iac/main.bicep`: Main Bicep template
+- `output/phase4-iac/modules/`: Resource-specific Bicep modules
+- `output/phase4-iac/parameters/`: Environment-specific parameters
+- `output/phase4-iac/.github/workflows/deploy.yml`: Deployment pipeline
+- `output/phase4-iac/.github/workflows/validate.yml`: Validation pipeline
 
 ## Quality Gates
 
-- [ ] Bicep テンプレートが lint エラーなくパスする
-- [ ] 全リソースがモジュール化されている（1モジュール = 1リソースタイプ）
-- [ ] パラメータファイルで環境ごとの差異を吸収している
-- [ ] CI/CD パイプラインに what-if ステップが含まれている
-- [ ] シークレット（接続文字列・キー）がハードコードされていない
-- [ ] タグ付けポリシー（Project、Owner、Environment）が適用されている
+- [ ] Bicep templates pass lint without errors
+- [ ] All resources are modularized (1 module = 1 resource type)
+- [ ] Parameter files absorb environment-specific differences
+- [ ] CI/CD pipeline includes a what-if step
+- [ ] Secrets (connection strings, keys) are not hardcoded
+- [ ] Tagging policy (Project, Owner, Environment) is applied
 
 ## Gotchas
 
-- Bicep のモジュール参照パスはデプロイ実行ディレクトリからの相対パスになる。ディレクトリ構造を意識すること
-- Azure Machine Learning ワークスペースは依存リソース（Storage、Key Vault、Application Insights、Container Registry）が多い。デプロイ順序に注意すること
-- GitHub Actions のワークフローで Azure にデプロイする場合、OpenID Connect (OIDC) によるフェデレーション資格情報を推奨。シークレットベースの認証は避けること
-- GPU VM（NC/ND シリーズ）のクォータ制限に注意。デプロイ前にクォータ確認ステップを組み込むこと
+- Bicep module reference paths are relative to the deployment execution directory. Be mindful of directory structure
+- Azure Machine Learning workspaces have many dependent resources (Storage, Key Vault, Application Insights, Container Registry). Pay attention to deployment order
+- For GitHub Actions workflows deploying to Azure, OpenID Connect (OIDC) federated credentials are recommended. Avoid secret-based authentication
+- Be aware of GPU VM (NC/ND series) quota limits. Incorporate a quota check step before deployment
 
 ## Security Guardrails
 
-- Bicep テンプレートにシークレットやトークンを絶対に埋め込まない。Key Vault 参照または `@secure()` デコレータを使用すること
-- GitHub Actions の Azure 認証は OIDC フェデレーション必須。`AZURE_CREDENTIALS` シークレットは生成しないこと
-- リソースデプロイは最小権限の原則。マネージド ID + RBAC ロール割り当てをデフォルトとする
-- ネットワーク分離: VNet + Private Endpoint をデフォルトで設計。パブリックエンドポイントは明示的な根拠がない限り使用しないこと
+- Never embed secrets or tokens in Bicep templates. Use Key Vault references or the `@secure()` decorator
+- Azure authentication in GitHub Actions must use OIDC federation. Do not generate `AZURE_CREDENTIALS` secrets
+- Resource deployment follows the principle of least privilege. Default to Managed Identity + RBAC role assignments
+- Network isolation: Design with VNet + Private Endpoint by default. Do not use public endpoints without explicit justification
 
 ## Validation Loop
 
-1. Bicep テンプレートを生成する
+1. Generate Bicep templates
 2. Check:
-   - `az bicep build` でコンパイルエラーがないか
-   - `az deployment group what-if` で期待通りのリソースが作成されるか
-   - CI/CD パイプラインの YAML 構文が正しいか
+   - No compilation errors with `az bicep build`
+   - Expected resources are created with `az deployment group what-if`
+   - CI/CD pipeline YAML syntax is correct
 3. If any check fails:
-   - エラーを修正し再コンパイル
-   - 依存関係の順序を見直す
-   - 再検証する
-4. 全ゲートをパスした後のみ成果物を最終化する
+   - Fix errors and recompile
+   - Review dependency ordering
+   - Re-validate
+4. Finalize deliverables only after all gates pass

@@ -1,113 +1,112 @@
 ---
 name: spread1000-cost-estimator
 description: |
-  Azure 構成設計書に基づいてコストを算出する。月額・研究期間全体（約180日間）の
-  費用見積もりを生成し、SPReAD の予算申請に必要なコスト明細を作成する。
-  Use when Azureのコストを見積もりたい、予算計画を立てたい、申請書の経費欄を書きたい場合。
+  Estimate Azure costs based on architecture design. Generate monthly and full research period
+  (~180 days) cost estimates and produce cost breakdowns required for SPReAD budget applications.
+  Use when estimating Azure costs, planning budgets, or filling in expense sections of the proposal.
 ---
 
 # Cost Estimator
 
-Azure 構成設計書からコストを算出し、SPReAD の予算申請に対応した見積もりを生成する。
+Calculate costs from the Azure architecture design and generate estimates aligned with SPReAD budget application requirements.
 
 ## Use This Skill When
 
-- Azure 構成設計が完了し費用を見積もる段階
-- SPReAD 申請書の経費計画を作成したい
-- コスト最適化（スポット VM、リザーブドインスタンス等）を検討したい
+- Azure architecture design is complete and costs need to be estimated
+- Creating an expense plan for the SPReAD proposal
+- Evaluating cost optimization options (Spot VMs, Reserved Instances, etc.)
 
 ## Required Inputs
 
-- `output/phase1-azure-architecture.md`（Azure 構成設計書）
-- 研究期間（約180日間 = 約6ヶ月）
-- 月間利用時間の見込み（GPU稼働時間等）
+- `output/phase1-azure-architecture.md` (Azure architecture design)
+- Research period (~180 days ≈ ~6 months)
+- Estimated monthly usage hours (GPU uptime, etc.)
 
 ## Workflow
 
-1. **構成設計書の解析**: リソース一覧・SKU・数量を抽出する
-2. **単価取得（MANDATORY — LLM の記憶・推定値の使用を禁止）**:
-   エージェントは**必ず以下の手順で最新価格を実際に取得**し、取得結果を見積もり書に貼付すること。
-   Web フェッチまたは API 呼び出しが失敗した場合は、見積もり書に「価格未取得」と明記し、
-   推定値であることを太字で警告表示する。
+1. **Parse the architecture design**: Extract resource list, SKUs, and quantities
+2. **Retrieve unit prices (MANDATORY — using LLM memory/estimated values is PROHIBITED)**:
+   The agent **must retrieve actual latest prices using the steps below** and attach the results to the estimate document.
+   If web fetch or API calls fail, the estimate document must state "Price not retrieved" and display a bold warning indicating the value is estimated.
 
-   #### Step 2a: Azure Retail Prices API を呼び出す（推奨・最優先）
-   以下の URL パターンでブラウザまたは `fetch_webpage` / `curl` で JSON を取得する:
+   #### Step 2a: Call the Azure Retail Prices API (recommended, highest priority)
+   Retrieve JSON via browser, `fetch_webpage`, or `curl` using the following URL pattern:
    ```
    https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Machines' and armRegionName eq 'japaneast' and armSkuName eq 'Standard_ND96asr_v4'
    ```
-   - `armSkuName` を対象 VM に置き換える（例: `Standard_NC24ads_A100_v4`, `Standard_HB120rs_v3`）
-   - `armRegionName` はユーザー指定リージョン（既定: `japaneast`）
-   - レスポンス JSON の `retailPrice`（USD/hour）を単価として使用
-   - `type` フィールドで `Consumption`（Pay-as-you-go）と `Reservation`（RI）を区別
-   - Spot 価格: `$filter` に `and priceType eq 'Consumption' and skuName eq '... Spot'` を追加
+   - Replace `armSkuName` with the target VM (e.g., `Standard_NC24ads_A100_v4`, `Standard_HB120rs_v3`)
+   - Set `armRegionName` to the user-specified region (default: `japaneast`)
+   - Use `retailPrice` (USD/hour) from the response JSON as the unit price
+   - Distinguish `Consumption` (Pay-as-you-go) and `Reservation` (RI) via the `type` field
+   - For Spot pricing: add `and priceType eq 'Consumption' and skuName eq '... Spot'` to `$filter`
 
-   #### Step 2b: Azure 公式価格ページを Web フェッチする（API 失敗時のフォールバック）
-   - [Azure VM 価格](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/) — GPU VM の Pay-as-you-go / Spot / RI 価格
-   - [Azure Storage 価格](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) — Blob / ADLS Gen2
-   - [Azure ML 価格](https://azure.microsoft.com/en-us/pricing/details/machine-learning/) — ML Compute
-   - [Azure AI Services 価格](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/) — OpenAI / AI Foundry
-   - [Azure Managed Lustre 価格](https://azure.microsoft.com/en-us/pricing/details/managed-lustre/) — HPC ストレージ
-   - [Azure Cosmos DB 価格](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/) — グラフ DB
-   - [Azure AI Search 価格](https://azure.microsoft.com/en-us/pricing/details/search/) — 検索サービス
+   #### Step 2b: Web-fetch Azure official pricing pages (fallback if API fails)
+   - [Azure VM Pricing](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/) — GPU VM Pay-as-you-go / Spot / RI pricing
+   - [Azure Storage Pricing](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) — Blob / ADLS Gen2
+   - [Azure ML Pricing](https://azure.microsoft.com/en-us/pricing/details/machine-learning/) — ML Compute
+   - [Azure AI Services Pricing](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/) — OpenAI / AI Foundry
+   - [Azure Managed Lustre Pricing](https://azure.microsoft.com/en-us/pricing/details/managed-lustre/) — HPC storage
+   - [Azure Cosmos DB Pricing](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/) — Graph DB
+   - [Azure AI Search Pricing](https://azure.microsoft.com/en-us/pricing/details/search/) — Search service
 
-   #### Step 2c: 取得する価格項目
-   - Pay-as-you-go 価格（USD/hour）
-   - Reserved Instance 1年・3年 価格
-   - Spot VM 価格
-   - Azure for Research / Academic 割引の適用可否
+   #### Step 2c: Price items to retrieve
+   - Pay-as-you-go price (USD/hour)
+   - Reserved Instance 1-year and 3-year prices
+   - Spot VM prices
+   - Applicability of Azure for Research / Academic discounts
 
-   #### Step 2d: 記録
-   - **価格取得日**を見積もり書に必ず記録する
-   - **価格ソース**（API URL またはページ URL）を見積もり書に記録する
-   - **為替レート**は取得日時点の TTM を使用し、出典を明記する
-3. **コスト算出**:
-   - 月額コスト（通常利用・ピーク利用）
-   - 研究期間全体（約180日間）の総コスト
-   - コスト最適化オプションの比較
-   - 直接経費500万円以下への収毾確認
-4. **予算計画書生成**: `output/phase2-cost-estimate.md` として保存
+   #### Step 2d: Record-keeping
+   - **Price retrieval date** must be recorded in the estimate document
+   - **Price source** (API URL or page URL) must be recorded in the estimate document
+   - **Exchange rate**: use the TTM rate as of the retrieval date, and cite the source
+3. **Cost calculation**:
+   - Monthly cost (normal usage and peak usage)
+   - Total cost for the full research period (~180 days)
+   - Comparison of cost optimization options
+   - Verify that 直接経費 fits within the ¥5M ceiling
+4. **Generate budget plan**: Save as `output/phase2-cost-estimate.md`
    - Reuse `assets/cost-estimate-template.md` when producing the estimate
-5. **検証**: SPReAD の予算上限（直接経費500万円以下）との整合性を確認
+5. **Validation**: Confirm alignment with the SPReAD budget ceiling (直接経費 ≤ ¥5M)
 
 ## Deliverables
 
-- `output/phase2-cost-estimate.md`: コスト見積もり書（完全版）
+- `output/phase2-cost-estimate.md`: Cost estimate document (complete version)
 
 ## Quality Gates
 
-- [ ] 全リソースの単価根拠が明記されている
-- [ ] 月額・総額の2段階で見積もりが提示されている
-- [ ] コスト最適化オプション（スポットVM、RI、シャットダウンスケジュール）が検討されている
-- [ ] SPReAD の予算要件（直接経費500万円以下・間接経費30%）との整合性が確認されている
-- [ ] 為替レート（JPY/USD）が明記されている
+- [ ] Unit price sources are documented for all resources
+- [ ] Estimates are presented at two levels: monthly and total
+- [ ] Cost optimization options (Spot VMs, RI, shutdown schedules) have been evaluated
+- [ ] Alignment with SPReAD budget requirements (直接経費 ≤ ¥5M, 間接経費 30%) is confirmed
+- [ ] Exchange rate (JPY/USD) is stated
 
-## HARD GATE — 価格検証
+## HARD GATE — Price Verification
 
-見積もり書を最終化する前に、以下のチェックを必ず実行する。**1つでも FAIL した場合、見積もり書を「ドラフト（価格未検証）」と明記し、ユーザーに警告する。**
+Before finalizing the estimate, the following checks must be executed. **If any check FAILs, mark the estimate as "Draft (prices unverified)" and warn the user.**
 
-- [ ] 全 VM SKU の単価が Azure Retail Prices API または公式価格ページから取得されている
-- [ ] 取得日が見積もり書に記録されている
-- [ ] 取得元 URL が見積もり書に記録されている
-- [ ] 為替レートの出典が明記されている
-- [ ] LLM の記憶・推定値のみで算出された費目が存在しない
+- [ ] Unit prices for all VM SKUs have been retrieved from the Azure Retail Prices API or official pricing pages
+- [ ] Retrieval date is recorded in the estimate document
+- [ ] Source URLs are recorded in the estimate document
+- [ ] Exchange rate source is cited
+- [ ] No line item has been calculated solely from LLM memory/estimated values
 
 ## Gotchas
 
-- **🚫 LLM の学習データに含まれる過去の価格を使ってはならない。** エージェントは必ず `fetch_webpage` ツールまたはターミナルの `curl` で Azure Retail Prices API（`prices.azure.com`）を呼び出し、レスポンス JSON から `retailPrice` を抽出すること。API 呼び出しをスキップして推定値を使った場合、見積もり書に `⚠️ 価格未検証（推定値）` と太字で警告表示すること
-- Azure Retail Prices API (`prices.azure.com`) を使えば JSON で最新単価を取得できる。`armRegionName` は `japaneast` を既定とし、ユーザーの希望リージョンに合わせて変更すること
-- スポット VM は最大90%割引だが、プリエンプションのリスクがある。学習の中断耐性（チェックポイント）を前提とすること
-- Azure for Research プログラムの割引率は申請内容によって異なる。確定額ではなく参考値として記載すること
-- 隠れコスト（データ転送、ログストレージ、Key Vault 操作）を見落とさないこと
+- **🚫 Do NOT use historical prices from LLM training data.** The agent must call the Azure Retail Prices API (`prices.azure.com`) via `fetch_webpage` or terminal `curl`, and extract `retailPrice` from the response JSON. If the API call is skipped and estimated values are used, display a bold warning `⚠️ 価格未検証（推定値）` in the estimate document
+- The Azure Retail Prices API (`prices.azure.com`) returns the latest unit prices in JSON. Default `armRegionName` to `japaneast` and adjust to the user's preferred region
+- Spot VMs offer up to 90% discount but carry preemption risk. Assume training interruption tolerance (checkpointing) is in place
+- Azure for Research program discount rates vary by application. List them as reference values, not confirmed amounts
+- Do not overlook hidden costs (data transfer, log storage, Key Vault operations)
 
 ## Validation Loop
 
-1. コスト見積もりを生成する
+1. Generate the cost estimate
 2. Check:
-   - 全リソースがカバーされているか
-   - 合計金額が予算上限内か
-   - コスト最適化の余地が検討されているか
+   - Are all resources covered?
+   - Is the total within the budget ceiling?
+   - Have cost optimization opportunities been explored?
 3. If any check fails:
-   - VM サイズのダウングレードまたはスポット VM 切替を検討
-   - 利用時間の最適化（夜間シャットダウン等）を提案
-   - 再計算する
-4. 全ゲートをパスした後のみ成果物を最終化する
+   - Consider VM size downgrade or switching to Spot VMs
+   - Propose usage optimization (e.g., overnight shutdown schedules)
+   - Recalculate
+4. Finalize the deliverable only after all gates pass

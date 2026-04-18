@@ -1,77 +1,78 @@
 ---
 name: spread1000-submission-guide
 description: |
-  SPReAD 応募手続きの全体をガイドする。AIインタビューの準備・実施、e-Rad登録・提出手順、
-  応募資格・重複制限の確認、応募書類（様式0〜4）の完備性チェックを行う。
-  Use when AIインタビューの準備をしたい、e-Radの手続きを知りたい、応募資格を確認したい、
-  重複制限を確認したい、学生応募の手続きを知りたい、応募書類を整えたい場合。
+  Guide the entire SPReAD submission process. Covers AI interview preparation and execution,
+  e-Rad registration and submission procedures, eligibility and overlap restriction checks,
+  and completeness verification of submission documents (様式0–4).
+  Use when preparing for the AI interview, learning e-Rad procedures, checking eligibility,
+  checking overlap restrictions, learning student application procedures, or assembling submission documents.
 ---
 
 # Submission Guide
 
-SPReAD 応募に必要な手続き（AIインタビュー・e-Rad・応募書類）を一括でガイドする。
+Provide unified guidance on all procedures required for SPReAD submission (AI interview, e-Rad, submission documents).
 
 ## Use This Skill When
 
-- AIインタビューの準備・実施手順を知りたい
-- e-Rad での登録・提出手続きを確認したい
-- 応募資格の要件を確認したい
-- ARiSE 等との重複制限を確認したい
-- 学生として応募する場合の手続きを知りたい
-- 応募書類セット（様式0〜4）を揃えたい
+- Preparing for or learning the AI interview procedure
+- Confirming e-Rad registration and submission procedures
+- Checking eligibility requirements
+- Checking overlap restrictions (e.g., with ARiSE)
+- Learning student-specific application procedures
+- Assembling the full document set (様式0–4)
 
 ## Required Inputs
 
-- 応募者の属性（所属機関・職位・学生か否か）
-- 他の競争的研究費の応募・受入状況（重複制限確認用）
+- Applicant attributes (affiliated institution, position, whether a student)
+- Status of other competitive research fund applications/awards (for overlap restriction checks)
 
 ## Workflow
 
-1. **応募資格チェック** — 応募者が資格要件を満たすか判定
+1. **Eligibility check** — Determine whether the applicant meets all eligibility requirements
    - Read `references/eligibility-rules.md` when checking eligibility
-2. **重複制限チェック** — ARiSE等との重複制限を確認
-3. **AIインタビュー準備ガイド** — 申込〜実施〜完了証明取得の手順を案内
+2. **Overlap restriction check** — Verify restrictions with ARiSE and other programs
+3. **AI interview preparation guide** — Walk through the process from registration to completion certificate
    - Read `references/ai-interview-guide.md` when guiding AI interview
-4. **e-Rad提出ガイド** — 登録確認・研究インテグリティ誓約・提出手順
-5. **応募書類チェックリスト生成** — 様式0〜4＋添付書類の完備性チェック
-6. **ガイドレポート出力** — `output/submission-checklist.md` として保存
+4. **e-Rad submission guide** — Registration confirmation, research integrity pledge, submission steps
+5. **Generate submission document checklist** — Completeness check for 様式0–4 and attachments
+6. **Output guide report** — Save as `output/submission-checklist.md`
    - Reuse `assets/submission-checklist-template.md` when producing the checklist
 
 ## Deliverables
 
-- `output/submission-checklist.md`: 応募手続きチェックリスト（完全版）
+- `output/submission-checklist.md`: Submission procedure checklist (complete version)
 
 ## Quality Gates
 
-- [ ] 応募資格の全要件が確認されている
-- [ ] 重複制限（ARiSEとの関係含む）が確認されている
-- [ ] AIインタビューの申込〜完了証明取得の全手順が案内されている
-- [ ] e-Rad登録・研究インテグリティ誓約の確認が含まれている
-- [ ] 応募書類（様式0〜4）の完備性がチェックされている
-- [ ] 学生応募の場合は様式3・4の要件が追加されている
+- [ ] All eligibility requirements have been verified
+- [ ] Overlap restrictions (including ARiSE) have been checked
+- [ ] Full AI interview procedure (registration → completion certificate) has been covered
+- [ ] e-Rad registration and research integrity pledge confirmation are included
+- [ ] Completeness of submission documents (様式0–4) has been checked
+- [ ] For student applicants, 様式3 and 様式4 requirements have been added
 
 ## Gotchas
 
-- AIインタビューは原則1人1回のみ。中断した場合は48時間以内にリンクから再開可能
-- AIインタビュー登録時のメールアドレスと研究計画調書のメールアドレスが一致しないと応募不受理
-- e-Radの研究インテグリティ誓約が未登録だと応募不受理
-- 学生が指導教員の研究者番号で応募する場合でも、e-Rad個別項目は学生本人の情報を入力（エフォート率は1%）
-- AIインタビューの内容をSNS等で第三者に開示すると不採択の可能性
+- The AI interview is limited to one attempt per person. If interrupted, it can be resumed via the link within 48 hours
+- If the email address used for AI interview registration does not match the one in the 研究計画調書, the application will be rejected
+- If the research integrity pledge on e-Rad is not registered, the application will be rejected
+- When a student applies using their supervisor's researcher number, e-Rad individual fields must still be filled with the student's own information (effort rate: 1%)
+- Disclosing AI interview content on social media or to third parties may result in rejection
 
 ## Security Guardrails
 
-- AIインタビューの質問事項・内容を外部に開示しない
-- e-Radのログイン情報・研究者番号を成果物ファイルに記載しない
-- 個人情報（メールアドレス等）はチェックリスト内で伏字処理する
+- Do not disclose AI interview questions or content externally
+- Do not include e-Rad login credentials or researcher numbers in deliverable files
+- Mask personal information (email addresses, etc.) in the checklist
 
 ## Validation Loop
 
-1. 応募者属性に基づきチェックリストを生成する
+1. Generate the checklist based on applicant attributes
 2. Check:
-   - 応募資格の全要件をパスしているか
-   - 重複制限に抵触していないか
-   - AIインタビューの完了が確認できるか
-   - 全応募書類が揃っているか
+   - Do all eligibility requirements pass?
+   - Are there no overlap restriction violations?
+   - Can AI interview completion be confirmed?
+   - Are all submission documents assembled?
 3. If any check fails:
-   - 不備項目を明示し、必要な対応手順を案内する
-4. 全ゲートをパスした後のみチェックリストを最終化する
+   - Identify the deficient item and guide the required corrective steps
+4. Finalize the checklist only after all gates pass

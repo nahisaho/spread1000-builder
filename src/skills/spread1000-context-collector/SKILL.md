@@ -1,42 +1,44 @@
 ---
 name: spread1000-context-collector
 description: |
-  ユーザーのプロンプトにコンテキストが不足している場合に、1問1答形式で情報を収集し、
-  収集した情報から6要素メタプロンプトを生成して後続スキルに渡す。
-  shikigami の対話的目的探索パターンを SPReAD に特化して適用する。
-  Use when ユーザーの依頼が曖昧、研究分野が不明、必要情報が不足している場合。
+  Collects missing context from the user via one-question-at-a-time dialogue,
+  generates a 6-element meta-prompt, and passes it to downstream skills.
+  Applies shikigami's interactive purpose-discovery pattern specialized for SPReAD.
+  Use when user request is ambiguous (依頼が曖昧), research field is unknown (研究分野が不明),
+  or required information is insufficient (必要情報が不足).
 ---
 
 # Context Collector
 
-ユーザーのプロンプトからコンテキスト充足度を判定し、不足時は1問1答で情報を収集、
-6要素メタプロンプトを生成して後続フェーズの精度を最大化する。
+Assess context sufficiency from the user's prompt, collect missing information
+via one-question-at-a-time dialogue, and generate a 6-element meta-prompt
+to maximize downstream phase accuracy.
 
 ## Use This Skill When
 
-- ユーザーの依頼が曖昧で、どのスキルにルーティングすべきか判断できない
-- 研究分野・テーマ・目的のいずれかが不明確
-- 後続スキル（research-planner 等）の Required Inputs を満たせない
+- The user's request is ambiguous and it is unclear which skill to route to
+- Any of research field, theme, or purpose is unclear
+- Required Inputs for downstream skills (e.g., research-planner) cannot be satisfied
 
 ## Context Sufficiency Check
 
-以下の6要素をユーザーの初回プロンプトから抽出できるか判定する。
-3要素以上が不明の場合、このスキルを起動する。
+Determine whether the following 6 elements can be extracted from the user's initial prompt.
+If 3 or more elements are unknown, activate this skill.
 
-| 要素 | SPReAD での意味 | 判定基準 |
-|------|---------------------|---------|
-| PURPOSE | 研究の目的・AI活用で達成したいこと | 「〜を解明」「〜を予測」等の動詞があるか |
-| TARGET | 研究対象・分野 | 具体的な学問分野・対象物が明示されているか |
-| SCOPE | 研究の範囲・規模 | データ規模・対象期間・地理的範囲の言及があるか |
-| TIMELINE | 研究期間 | 研究期間（約180日間）の認識があるか |
-| CONSTRAINTS | 制約条件 | 予算・設備・人員・倫理的制約の言及があるか |
-| DELIVERABLES | 期待する成果物 | 論文・ソフトウェア・モデル等の言及があるか |
+| Element | Meaning in SPReAD | Criteria |
+|---------|-------------------|----------|
+| PURPOSE | Research goal / what to achieve with AI | Contains action verbs like 「〜を解明」「〜を予測」 |
+| TARGET | Research subject / field | A specific academic field or subject is explicitly stated |
+| SCOPE | Scope / scale of research | Data scale, target period, or geographic scope is mentioned |
+| TIMELINE | Research period | Awareness of the ~180-day research period |
+| CONSTRAINTS | Constraints | Budget, equipment, personnel, or ethical constraints are mentioned |
+| DELIVERABLES | Expected outputs | Papers, software, models, etc. are mentioned |
 
 ## Workflow
 
-### Step 1: コンテキスト充足度判定
+### Step 1: Context Sufficiency Assessment
 
-ユーザーの初回プロンプトを解析し、6要素の充足状況を内部で判定する。
+Analyze the user's initial prompt and internally assess the status of the 6 elements.
 
 ```
 判定結果の例:
@@ -49,18 +51,18 @@ description: |
   → 不足4要素 ≥ 3 → context-collector を起動
 ```
 
-### Step 2: 1問1答による情報収集
+### Step 2: One-Question-at-a-Time Information Collection
 
-**ルール**:
-- 1回のメッセージで **1問だけ** 質問する（複数質問の同時提示は禁止）
-- 最低3問、最大7問で収集を完了する
-- 質問にはカテゴリラベルを付ける
-- ユーザーが「わからない」と答えた場合は推定値を提案して確認する
+**Rules**:
+- Ask **only 1 question** per message (simultaneous multiple questions are prohibited)
+- Complete collection in a minimum of 3 and a maximum of 7 questions
+- Attach a category label to each question
+- If the user answers "わからない" (don't know), propose an estimated value and confirm
 
-**質問カテゴリと順序**:
+**Question Categories and Order**:
 
-| 順序 | カテゴリ | 質問例（SPReAD 特化） |
-|------|---------|--------------------------|
+| Order | Category | Example Question (SPReAD-specific) |
+|-------|----------|-------------------------------------|
 | 1 | WHY | この研究で AI を使って何を達成したいですか？ |
 | 2 | TARGET | 研究対象の分野・物質・現象は何ですか？ |
 | 3 | DATA | どのようなデータを扱いますか？（種類・規模・形式） |
@@ -69,7 +71,7 @@ description: |
 | 6 | SUCCESS | どのような成果が得られれば成功ですか？ |
 | 7 | EXISTING | 現在の研究手法で課題に感じていることは何ですか？ |
 
-**質問フォーマット**:
+**Question Format**:
 
 ```markdown
 ## ❓ 質問 N/M
@@ -78,14 +80,14 @@ description: |
 （例: 新規材料の候補を網羅的にスクリーニングしたい、気象シミュレーションの精度を向上させたい）
 ```
 
-> ⚠️ CONSTRAINT カテゴリの質問では、例文に **SPReAD の予算上限は直接経費500万円（間接経費を含め最大650万円）** と正確に記載すること。「1,000万円」等の誤った金額を記載してはならない。
+> ⚠️ In CONSTRAINT category questions, the example text **must** accurately state **SPReAD の予算上限は直接経費500万円（間接経費を含め最大650万円）**. Never state incorrect amounts such as 「1,000万円」.
 
-### Step 3: メタプロンプト生成
+### Step 3: Meta-Prompt Generation
 
-収集した情報を6要素メタプロンプトに構造化する。
+Structure the collected information into a 6-element meta-prompt.
 - Reuse `assets/meta-prompt-template.md` when producing the meta-prompt
 
-**メタプロンプト表示フォーマット**:
+**Meta-prompt Display Format**:
 
 ```markdown
 ## 📋 構造化メタプロンプト
@@ -103,44 +105,44 @@ description: |
 修正があればお知らせください。
 ```
 
-### Step 4: ユーザー承認
+### Step 4: User Approval
 
-- メタプロンプトを表示し、ユーザーの承認を **必ず待つ**
-- 修正指示があれば該当要素を更新して再表示する
-- 承認後、メタプロンプトを `output/meta-prompt.md` に保存する
+- Display the meta-prompt and **always wait** for user approval
+- If modifications are requested, update the relevant elements and re-display
+- After approval, save the meta-prompt to `output/meta-prompt.md`
 
-### Step 5: 後続スキルへの引き渡し
+### Step 5: Handoff to Downstream Skills
 
-承認されたメタプロンプトを元に、AGENTS.md のルーティングルールに従って
-最適なスキルに処理を引き渡す。メタプロンプトの内容がそのまま
-後続スキルの入力コンテキストとなる。
+Based on the approved meta-prompt, hand off processing to the optimal skill
+following the routing rules in AGENTS.md. The meta-prompt content becomes
+the input context for the downstream skill as-is.
 
 ## Deliverables
 
-- `output/meta-prompt.md`: 承認済み6要素メタプロンプト
+- `output/meta-prompt.md`: Approved 6-element meta-prompt
 
 ## Quality Gates
 
-- [ ] 6要素すべてが埋まっている（「不明」「未定」は推定値で補完済み）
-- [ ] ユーザーの承認を得てからメタプロンプトを確定している
-- [ ] 1回のメッセージで複数質問を同時に行っていない
-- [ ] 最低3問の対話を実施している
+- [ ] All 6 elements are filled (「不明」/「未定」 have been supplemented with estimated values)
+- [ ] Meta-prompt is finalized only after obtaining user approval
+- [ ] Multiple questions are never asked simultaneously in a single message
+- [ ] A minimum of 3 dialogue turns have been conducted
 
 ## Gotchas
 
-- ユーザーが「全部お任せ」と言った場合でも、最低限 PURPOSE と TARGET は明示的に確認すること。推定のみで進めると後工程で大幅な手戻りが発生する
-- 質問の順序は固定ではない。ユーザーの初回プロンプトで既に判明している要素はスキップすること
-- 「わからない」という回答を受けた場合、研究分野の一般的な値を提案して確認を取ること
-- **TIMELINE の質問で申請締切を尋ねてはならない。** 公募期間は「令和8年4月17日～5月18日正午」で固定。研究期間も約180日間で固定。TIMELINE では180日間で取り組む範囲・マイルストーンを確認する
+- Even if the user says 「全部お任せ」 (leave everything to you), explicitly confirm at least PURPOSE and TARGET. Proceeding on estimates alone causes major rework downstream
+- Question order is not fixed. Skip elements already known from the user's initial prompt
+- When receiving a 「わからない」 response, propose typical values for the research field and confirm
+- **Never ask about the application deadline in TIMELINE questions.** The 公募期間 is fixed at 「令和8年4月17日～5月18日正午」. The research period is also fixed at ~180 days. TIMELINE confirms the scope and milestones for the 180-day period
 
 ## Validation Loop
 
-1. 6要素の充足状況を判定する
+1. Assess the sufficiency status of the 6 elements
 2. Check:
-   - 全要素が具体的な値で埋まっているか
-   - ユーザーの承認を得ているか
-   - 後続スキルの Required Inputs を満たせるか
+   - All elements are filled with concrete values
+   - User approval has been obtained
+   - Required Inputs for downstream skills can be satisfied
 3. If any check fails:
-   - 不足要素に対する追加質問を行う
-   - 推定値を提案して確認する
-4. 全ゲートをパスした後のみメタプロンプトを確定する
+   - Ask additional questions for insufficient elements
+   - Propose estimated values and confirm
+4. Finalize the meta-prompt only after all gates pass

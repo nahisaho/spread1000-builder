@@ -1,94 +1,94 @@
 ---
 name: spread1000-proposal-writer
 description: |
-  SPReAD の申請書（研究計画書）を作成する。研究プラン、Azure 構成設計、
-  コスト見積もりを統合し、公募要件に沿った申請書を生成する。
-  Use when 申請書を書きたい、研究計画書を仕上げたい、公募書類を作成したい場合。
+  Draft the SPReAD proposal (research plan document). Integrate the research plan, Azure architecture
+  design, and cost estimate to generate a proposal aligned with the 公募要領 requirements.
+  Use when writing the proposal, finalizing the research plan document, or preparing submission documents.
 ---
 
 # Proposal Writer
 
-研究プラン・Azure 構成設計・コスト見積もりを統合し、SPReAD の公募要件に沿った申請書を生成する。
+Integrate the research plan, Azure architecture design, and cost estimate to generate a proposal aligned with SPReAD 公募要領 requirements.
 
 ## Use This Skill When
 
-- 研究プラン・Azure 構成・コスト見積もりが揃い、申請書を作成する段階
-- SPReAD の公募要件に沿った研究計画書を仕上げたい
-- 申請書の品質チェック・推敲をしたい
+- Research plan, Azure architecture, and cost estimate are ready, and it is time to draft the proposal
+- Finalizing the research plan document (研究計画書) per SPReAD 公募要領
+- Performing quality checks or refining the proposal
 
 ## Required Inputs
 
-- `output/phase0-research-plan.md`（研究プラン）
-- `output/phase1-azure-architecture.md`（Azure 構成設計書）
-- `output/phase2-cost-estimate.md`（コスト見積もり）
-- 研究代表者・分担者の情報
-- 所属機関の情報
-- 研究期間: 交付決定日〜令和9年1月6日（約180日間）
+- `output/phase0-research-plan.md` (research plan)
+- `output/phase1-azure-architecture.md` (Azure architecture design)
+- `output/phase2-cost-estimate.md` (cost estimate)
+- Principal investigator / co-investigator information
+- Affiliated institution information
+- Research period: from the grant decision date to January 6, Reiwa 9 (~180 days)
 
 ## Workflow
 
-1. **前提条件チェック（MANDATORY）**:
-   - `output/phase2-cost-estimate.md` が存在することを確認する
-   - 存在しない場合、**まず `spread1000-cost-estimator` を実行してコスト見積もりを生成してから申請書作成に進む**
-   - Phase 2 が「ドラフト（価格未検証）」状態の場合、申請書の経費欄に `⚠️ 価格未検証（推定値）` と太字で警告表示する
-   - **経費欄の数値を LLM の記憶で推定して埋めてはならない。必ず Phase 2 の取得済み単価を使用すること**
-2. **入力統合**: Phase 0〜2 の成果物を読み込み統合する
-2. **公募要件確認**: SPReAD の公募要件を確認
+1. **Prerequisite check (MANDATORY)**:
+   - Confirm that `output/phase2-cost-estimate.md` exists
+   - If it does not exist, **run `spread1000-cost-estimator` first to generate the cost estimate before proceeding with proposal drafting**
+   - If Phase 2 is in "Draft (prices unverified)" state, display a bold warning `⚠️ 価格未検証（推定値）` in the expense section
+   - **Do NOT fill expense figures using LLM memory/estimated values. Always use the retrieved unit prices from Phase 2**
+2. **Input integration**: Read and integrate deliverables from Phases 0–2
+2. **Review 公募要領 requirements**: Confirm SPReAD 公募要領 requirements
    - Read `references/proposal-guidelines.md` when checking requirements
-3. **申請書構成**（様式1の各セクションに対応、文字数制限を厳守）:
-   - **I. 研究目的**（80〜400文字）— 研究課題の目的、対象とする現象・課題
-   - **II. 研究方法**（160〜800文字）— 工程ごとのAI適用、データ・評価指標・検証方法
-   - **III. AI利活用の妥当性・実現可能性**（160〜800文字）— 従来手法の限界、AI導入の意義
-   - **IV. 達成目標**（100〜500文字）— 中間（3ヶ月後）・最終（6ヶ月後）の到達目標
-   - **V. AI利活用のノウハウ抽出・共有の実現計画**（60〜300文字）— コミュニティ共有・他分野展開
+3. **Proposal structure** (mapped to 様式1 sections; strictly observe character limits):
+   - **I. 研究目的** (80–400 characters) — Purpose of the research, target phenomena/challenges
+   - **II. 研究方法** (160–800 characters) — AI application per work phase, data, evaluation metrics, validation methods
+   - **III. AI利活用の妥当性・実現可能性** (160–800 characters) — Limitations of conventional methods, significance of AI adoption
+   - **IV. 達成目標** (100–500 characters) — Milestones at mid-term (3 months) and final (6 months)
+   - **V. AI利活用のノウハウ抽出・共有の実現計画** (60–300 characters) — Community sharing and cross-domain expansion
      - Reuse `assets/knowhow-sharing-template.md` when producing the know-how sharing section
-   - **参考）図の貼付**（最大1枚）— Phase 1b の draw.io 構成図から選択
-   - **VI. 研究業績等**（最大5件）— 学術論文・学会発表・著書の箇条書き
-   - 研究基盤計画（Azure 構成）
-   - 経費計画と積算根拠（直接経費500万円以下）
-4. **申請書生成**: `output/phase3-proposal.md` として保存
+   - **Reference: Figure attachment** (max 1 figure) — Select from Phase 1b draw.io architecture diagrams
+   - **VI. 研究業績等** (max 5 items) — Bullet list of journal papers, conference presentations, and books
+   - Research infrastructure plan (Azure architecture)
+   - Expense plan and cost justification (直接経費 ≤ ¥5M)
+4. **Generate proposal**: Save as `output/phase3-proposal.md`
    - Reuse `assets/proposal-template.md` when producing the proposal
-5. **品質レビュー**: 公募要件との整合性、論理的一貫性を確認
+5. **Quality review**: Verify alignment with 公募要領 requirements and logical consistency
 
 ## Deliverables
 
-- `output/phase3-proposal.md`: SPReAD 申請書（完全版）
+- `output/phase3-proposal.md`: SPReAD proposal (complete version)
 
 ## Quality Gates
 
-- [ ] 公募要件の全必須項目が網羅されている
-- [ ] AI for Science としての革新性が明確に説明されている
-- [ ] 研究計画と Azure 構成の整合性がとれている
-- [ ] 経費計画の積算根拠がコスト見積もり書と一致している
-- [ ] 研究スケジュールにマイルストーンが設定されている
-- [ ] 日本語として自然で読みやすい文章になっている
+- [ ] All mandatory items in the 公募要領 are covered
+- [ ] Innovativeness as "AI for Science" is clearly articulated
+- [ ] Research plan and Azure architecture are consistent
+- [ ] Expense plan justification matches the cost estimate document
+- [ ] Research schedule includes milestones
+- [ ] The Japanese text reads naturally and clearly
 
 ## Gotchas
 
-- **🚫 経費欄の数値を LLM の学習データや推定値で埋めてはならない。** 経費の積算根拠は必ず `output/phase2-cost-estimate.md` の Azure Retail Prices API 取得済み単価に基づくこと。Phase 2 が存在しない場合は `spread1000-cost-estimator` を先に実行する
-- SPReAD は「AI を活用した科学研究の革新」が主旨。既存手法の単純な置き換えではなく、AI によって初めて可能になる研究アプローチを強調すること
-- 経費計画は SPReAD の予算上限（直接経費500万円以下）に収まるようにコスト見積もりを調整すること
-- 研究倫理・データ管理ポリシーへの言及を忘れないこと
+- **🚫 Do NOT fill expense figures using LLM training data or estimated values.** Cost justification must be based on Azure Retail Prices API-retrieved unit prices from `output/phase2-cost-estimate.md`. If Phase 2 does not exist, run `spread1000-cost-estimator` first
+- SPReAD's core theme is "innovating scientific research through AI." Emphasize research approaches that are only possible with AI, rather than simple replacements of existing methods
+- Adjust the cost estimate so the expense plan stays within the SPReAD budget ceiling (直接経費 ≤ ¥5M)
+- Do not forget to address research ethics and data management policies
   - Read `references/dmp-guide.md` when producing data management sections
-- 申請書の文字数制限を厳守すること（各セクションに日本語/英語の文字数範囲が指定されている）
-- 様式1はExcelのまま提出（PDF化不可）。テンプレートの文字数をカウントして範囲内に収めること
-- 図は最大1枚。Phase 1b の draw.io 構成図から最も適切なものを選択すること
+- Strictly observe the character limits for each section (Japanese/English character ranges are specified per section)
+- 様式1 must be submitted as Excel (PDF conversion is not allowed). Count characters in the template and keep within limits
+- Maximum 1 figure. Select the most appropriate diagram from the Phase 1b draw.io architecture diagrams
 
 ## Security Guardrails
 
-- 申請書に実際の患者データ・個人情報・機密データを含めないこと。データ例は必ず匹名化・ダミー化する
-- 研究倫理審査（IRB）およびデータ管理計画（DMP）への言及を必須とする
-- 医療データを扱う研究では、データ保護規制（個人情報保護法・HIPAA 等）への準拠を明記すること
+- Do not include actual patient data, personally identifiable information, or confidential data in the proposal. Data examples must be anonymized or use dummy data
+- References to IRB (research ethics review) and DMP (data management plan) are mandatory
+- For research handling medical data, explicitly state compliance with data protection regulations (個人情報保護法, HIPAA, etc.)
 
 ## Validation Loop
 
-1. 申請書を生成する
+1. Generate the proposal
 2. Check:
-   - 公募要件の全項目がカバーされているか
-   - Phase 0〜2 の成果物との整合性があるか
-   - 文章が論理的に一貫しているか
+   - Are all 公募要領 items covered?
+   - Is the proposal consistent with Phase 0–2 deliverables?
+   - Is the text logically coherent?
 3. If any check fails:
-   - 不足項目を追記する
-   - 矛盾箇所を修正する
-   - 文章を推敲する
-4. 全ゲートをパスした後のみ成果物を最終化する
+   - Add missing items
+   - Fix inconsistencies
+   - Refine the text
+4. Finalize the deliverable only after all gates pass

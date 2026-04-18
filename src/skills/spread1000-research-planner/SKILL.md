@@ -1,73 +1,75 @@
 ---
 name: spread1000-research-planner
 description: |
-  AI for Science の研究プランを策定する。研究者の専門分野にAIをどう組み込むかを
-  Webリサーチ・論文調査を通じて提案し、具体的な研究計画書を生成する。
-  Use when 研究テーマへのAI活用方法がわからない、研究プランを作りたい、
-  AI for Scienceの最新動向を知りたい場合。
+  Formulates an AI for Science research plan. Proposes how to integrate AI into the
+  researcher's domain through web research and literature survey, and generates a
+  concrete 研究計画書 (research plan document).
+  Use when user doesn't know how to apply AI to their 研究テーマ (research theme),
+  wants to create a 研究プラン (research plan), or wants to learn about
+  AI for Science latest trends (最新動向).
 ---
 
 # Research Planner
 
-研究者の専門分野に最適な AI 活用研究プランを策定する。
+Formulate the optimal AI-powered research plan for the researcher's domain.
 
 ## Use This Skill When
 
-- 研究テーマは決まっているが AI の活用方法がわからない
-- AI for Science の成功事例や最新動向を調査したい
-- SPReAD に応募するための研究計画書を作成したい
+- The research theme is decided but the user doesn't know how to leverage AI
+- The user wants to survey AI for Science success stories and latest trends
+- The user wants to create a 研究計画書 for SPReAD application
 
 ## Required Inputs
 
-- 研究者の専門分野（例: 材料科学、生命科学、気象学など）
-- 研究テーマまたは課題の概要
-- 現在の研究手法・使用データの概要（任意）
+- Researcher's domain (e.g., materials science, life science, meteorology)
+- Research theme or problem overview
+- Current research methods / data overview (optional)
 
 ## Workflow
 
-1. **ヒアリング**: 研究者の分野・テーマ・現在の課題を確認する
-2. **Web リサーチ**: 以下を調査する
-   - 同分野における AI for Science の成功事例（国内外）
-   - 適用可能な AI/ML 手法（深層学習、強化学習、生成AI、シミュレーション等）
-   - 利用可能なデータセット・計算基盤
-   - 文部科学省 AI for Science 推進委員会の最新方針
-3. **AI 活用方針の策定**:
-   - 研究課題に対する AI 手法のマッピング
-   - 期待される成果・ブレークスルーの明確化
-   - 必要な計算リソース（GPU、ストレージ、ネットワーク等）の概算
-4. **研究プラン生成**: `output/phase0-research-plan.md` として保存
+1. **Hearing**: Confirm the researcher's field, theme, and current challenges
+2. **Web Research**: Investigate the following:
+   - AI for Science success stories in the same field (domestic and international)
+   - Applicable AI/ML methods (deep learning, reinforcement learning, generative AI, simulation, etc.)
+   - Available datasets and computational infrastructure
+   - Latest policies from MEXT (文部科学省) AI for Science promotion committee
+3. **AI Strategy Formulation**:
+   - Map AI methods to research challenges
+   - Clarify expected outcomes and breakthroughs
+   - Estimate required computational resources (GPU, storage, network, etc.)
+4. **Research Plan Generation**: Save as `output/phase0-research-plan.md`
    - Reuse `assets/research-plan-template.md` when producing the research plan
-5. **レビュー**: 研究プランの技術的実現可能性を検証
+5. **Review**: Verify technical feasibility of the research plan
 
 ## Deliverables
 
-- `output/phase0-research-plan.md`: AI 活用研究プラン（完全版）
-- `output/phase0-research-survey.md`: Web リサーチ結果のサマリー
+- `output/phase0-research-plan.md`: AI-powered research plan (complete)
+- `output/phase0-research-survey.md`: Web research results summary
 
 ## Quality Gates
 
-- [ ] 研究テーマと AI 手法の対応が明確に記述されている
-- [ ] 3 件以上の関連事例が引用されている
-- [ ] 必要な計算リソースが定量的に見積もられている
-- [ ] 研究スケジュール（マイルストーン）が含まれている
-- [ ] AI for Science の文脈での新規性・革新性が説明されている
+- [ ] Mapping between research theme and AI methods is clearly described
+- [ ] 3 or more related case studies are cited
+- [ ] Required computational resources are quantitatively estimated
+- [ ] Research schedule (milestones) is included
+- [ ] Novelty and innovativeness in the AI for Science context is explained
 
 ## Gotchas
 
-- AI 手法の選定は研究データの特性に強く依存する。データ形式（画像、時系列、テキスト、3D構造等）を必ず確認すること
-- 「AI を使えば何でもできる」という過度な期待を研究計画に反映しないこと。技術的制約を明示する
-- 計算リソースの見積もりは、学習データサイズ・モデル規模・学習回数から具体的に算出すること
-- 研究分野によって利用すべきフレームワーク（PyTorch/TensorFlow/JAX等）が異なる
+- AI method selection strongly depends on research data characteristics. Always confirm data format (images, time series, text, 3D structures, etc.)
+- Do not reflect overblown expectations like "AI can do anything" in the research plan. Explicitly state technical constraints
+- Compute resource estimates must be concretely calculated from training data size, model scale, and number of training iterations
+- The appropriate framework (PyTorch/TensorFlow/JAX, etc.) varies by research field
 
 ## Validation Loop
 
-1. 研究プランを生成する
+1. Generate the research plan
 2. Check:
-   - AI手法と研究課題の対応が論理的か
-   - 計算リソース見積もりが現実的か
-   - スケジュールが実行可能か
+   - Is the mapping between AI methods and research challenges logical?
+   - Are compute resource estimates realistic?
+   - Is the schedule feasible?
 3. If any check fails:
-   - 該当セクションを特定し修正
-   - Web リサーチで補足情報を取得
-   - 再検証する
-4. 全ゲートをパスした後のみ成果物を最終化する
+   - Identify and fix the relevant section
+   - Obtain supplementary information via web research
+   - Re-verify
+4. Finalize deliverables only after all gates pass
