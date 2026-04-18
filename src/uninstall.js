@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const PACKAGE_NAME = "spread1000-builder";
+const PACKAGE_NAME = "@nahisaho/spread1000-builder";
 const PKG_DIR = __dirname;
 
 // ── Detect project root ─────────────────────────────
