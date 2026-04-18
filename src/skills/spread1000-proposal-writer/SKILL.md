@@ -1,0 +1,87 @@
+---
+name: spread1000-proposal-writer
+description: |
+  SPReAD の申請書（研究計画書）を作成する。研究プラン、Azure 構成設計、
+  コスト見積もりを統合し、公募要件に沿った申請書を生成する。
+  Use when 申請書を書きたい、研究計画書を仕上げたい、公募書類を作成したい場合。
+---
+
+# Proposal Writer
+
+研究プラン・Azure 構成設計・コスト見積もりを統合し、SPReAD の公募要件に沿った申請書を生成する。
+
+## Use This Skill When
+
+- 研究プラン・Azure 構成・コスト見積もりが揃い、申請書を作成する段階
+- SPReAD の公募要件に沿った研究計画書を仕上げたい
+- 申請書の品質チェック・推敲をしたい
+
+## Required Inputs
+
+- `output/phase0-research-plan.md`（研究プラン）
+- `output/phase1-azure-architecture.md`（Azure 構成設計書）
+- `output/phase2-cost-estimate.md`（コスト見積もり）
+- 研究代表者・分担者の情報
+- 所属機関の情報
+- 研究期間: 交付決定日〜令和9年1月6日（約180日間）
+
+## Workflow
+
+1. **入力統合**: Phase 0〜2 の成果物を読み込み統合する
+2. **公募要件確認**: SPReAD の公募要件を確認
+   - Read `references/proposal-guidelines.md` when checking requirements
+3. **申請書構成**:
+   - 研究の背景と目的（学術的意義・社会的意義）
+   - AI for Science としての革新性
+   - 研究計画・方法論（AI 活用戦略を含む）
+   - 中間（3ヶ月後）・最終（6ヶ月後）の到達目標
+   - Azure を活用した研究基盤計画
+   - 経費計画と積算根拠（直接経費500万円以下）
+   - 研究体制（研究代表者＋研究協力者）
+   - AI利活用のノウハウ抽出・共有計画
+     - Reuse `assets/knowhow-sharing-template.md` when producing the know-how sharing section
+   - 研究業績（5件以内）
+   - 期待される成果とインパクト
+4. **申請書生成**: `output/phase3-proposal.md` として保存
+   - Reuse `assets/proposal-template.md` when producing the proposal
+5. **品質レビュー**: 公募要件との整合性、論理的一貫性を確認
+
+## Deliverables
+
+- `output/phase3-proposal.md`: SPReAD 申請書（完全版）
+
+## Quality Gates
+
+- [ ] 公募要件の全必須項目が網羅されている
+- [ ] AI for Science としての革新性が明確に説明されている
+- [ ] 研究計画と Azure 構成の整合性がとれている
+- [ ] 経費計画の積算根拠がコスト見積もり書と一致している
+- [ ] 研究スケジュールにマイルストーンが設定されている
+- [ ] 日本語として自然で読みやすい文章になっている
+
+## Gotchas
+
+- SPReAD は「AI を活用した科学研究の革新」が主旨。既存手法の単純な置き換えではなく、AI によって初めて可能になる研究アプローチを強調すること
+- 経費計画は SPReAD の予算上限（直接経費500万円以下）に収まるようにコスト見積もりを調整すること
+- 研究倫理・データ管理ポリシーへの言及を忘れないこと
+  - Read `references/dmp-guide.md` when producing data management sections
+- 申請書の文字数・ページ数制限がある場合は厳守すること
+
+## Security Guardrails
+
+- 申請書に実際の患者データ・個人情報・機密データを含めないこと。データ例は必ず匹名化・ダミー化する
+- 研究倫理審査（IRB）およびデータ管理計画（DMP）への言及を必須とする
+- 医療データを扱う研究では、データ保護規制（個人情報保護法・HIPAA 等）への準拠を明記すること
+
+## Validation Loop
+
+1. 申請書を生成する
+2. Check:
+   - 公募要件の全項目がカバーされているか
+   - Phase 0〜2 の成果物との整合性があるか
+   - 文章が論理的に一貫しているか
+3. If any check fails:
+   - 不足項目を追記する
+   - 矛盾箇所を修正する
+   - 文章を推敲する
+4. 全ゲートをパスした後のみ成果物を最終化する

@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+output/
+
+# Windows NTFS alternate data streams
+*:Zone.Identifier
+*:sec.endpointdlp
