@@ -1,7 +1,6 @@
-# draw.io XML 生成ガイド
+# draw.io 図面生成ガイド
 
-draw.io MCP Server で使用する XML の生成規則。
-本ファイルは [jgraph/drawio-mcp](https://github.com/jgraph/drawio-mcp) の `shared/xml-reference.md` に基づく。
+[simonkurtz-MSFT/drawio-mcp-server](https://github.com/simonkurtz-MSFT/drawio-mcp-server) で使用する図面生成の規則。
 
 ## リジッドグリッド
 
@@ -19,7 +18,7 @@ draw.io MCP Server で使用する XML の生成規則。
 | 円 | 60 × 60 |
 | ドキュメント | 120 × 80 |
 | シリンダー | 100 × 70 |
-| Azure アイコン | 60 × 52（search_shapes 結果に従う） |
+| Azure アイコン | 60 × 60（`search-shapes` 結果に従う） |
 
 ## Azure アーキテクチャ図の構成パターン
 
@@ -60,7 +59,7 @@ Resource Group（最外）
 | 破線矢印 | `edgeStyle=orthogonalEdgeStyle;dashed=1` | 管理・監視 |
 | 太線矢印 | `edgeStyle=orthogonalEdgeStyle;strokeWidth=2` | 主要データパス |
 
-## search_shapes 検索キーワード集（Azure）
+## search-shapes 検索キーワード集（Azure）
 
 | Azure サービス | 検索キーワード |
 |--------------|--------------|
@@ -79,10 +78,13 @@ Resource Group（最外）
 | Batch | `Azure Batch` |
 | NSG | `Azure Network Security Group` |
 
-## XML の注意事項
+> ファジー検索対応: 部分一致で検索可能。`search-shapes` の `queries` パラメータに配列で一括渡しが効率的。
 
-- `value` に HTML を含む場合は style に `html=1` を追加
-- HTML タグは XML エスケープ: `<` → `&lt;`, `>` → `&gt;`, `&` → `&amp;`
-- エッジにウェイポイント（`<Array as="points">`）は追加しない
-- `exitX/exitY/entryX/entryY` は原則使わない
-- コンテナ内のノードは `parent` でコンテナ ID を指定
+## 図面構築の注意事項
+
+- `add-cells` は配列を受け付ける — 全セルを**1回の呼び出し**で追加する
+- `temp_id` で同バッチ内のセル間参照（エッジの source/target）が可能
+- `shape_name` パラメータで Azure アイコンを直接指定可能（`search-shapes` 不要）
+- グループ/コンテナは `create-groups` で作成し、`add-cells-to-group` でセルを配置
+- `export-diagram` で最終的な draw.io XML を取得してファイルに保存する
+- `import-diagram` で既存の draw.io XML を読み込んで編集再開が可能
