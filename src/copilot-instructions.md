@@ -46,6 +46,7 @@ output/
     │   ├── modules/
     │   └── .github/workflows/
     ├── phase5-deployment-checklist.md # デプロイ手順チェックリスト
+    ├── experiment-guide.md            # 実験手順書（環境構築・学習・推論・再現性管理）
     ├── post-award-roadmap.md          # 採択後ロードマップ（180日間）
     ├── grant-application-checklist.md # 交付申請手続きチェックリスト
     ├── progress-report-interim.md     # 中間進捗メモ（3ヶ月時点）

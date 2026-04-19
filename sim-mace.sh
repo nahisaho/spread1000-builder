@@ -319,7 +319,39 @@ fi
 # ============================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  M8: 分野固有の IaC Deployer 対応テスト"
+echo "  M8: 実験手順書スキルテスト"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+EXP="skills/spread1000-experiment-guide/SKILL.md"
+EXP_TMPL="skills/spread1000-experiment-guide/assets/experiment-guide-template.md"
+
+echo "  ── SKILL.md ──"
+check_keyword "$EXP" "実験手順書\|experiment" "EXP: 実験手順書"
+check_keyword "$EXP" "Azure ML\|ML Workspace" "EXP: Azure ML"
+check_keyword "$EXP" "チェックポイント\|checkpoint" "EXP: チェックポイント"
+check_keyword "$EXP" "再現性\|reproducibility" "EXP: 再現性"
+check_keyword "$EXP" "MLflow" "EXP: MLflow"
+check_keyword "$EXP" "Spot VM\|プリエンプション" "EXP: Spot VM対策"
+check_keyword "$EXP" "分散学習\|DDP\|DeepSpeed" "EXP: 分散学習"
+check_keyword "$EXP" "FAIR" "EXP: FAIR原則"
+check_keyword "$EXP" "experiment-guide.md" "EXP: 出力パス"
+
+echo "  ── assets ──"
+if [[ -f "$EXP_TMPL" ]]; then
+  check_keyword "$EXP_TMPL" "実験環境\|セットアップ" "EXP-tmpl: 環境セットアップ"
+  check_keyword "$EXP_TMPL" "学習実行\|ジョブ" "EXP-tmpl: 学習実行"
+  check_keyword "$EXP_TMPL" "評価メトリクス\|メトリクス" "EXP-tmpl: 評価メトリクス"
+  check_keyword "$EXP_TMPL" "再現性" "EXP-tmpl: 再現性管理"
+  pass "experiment-guide-template.md 存在"
+else
+  fail "experiment-guide-template.md 不在"
+fi
+
+# ============================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  M9: 分野固有の IaC Deployer 対応テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -346,7 +378,7 @@ fi
 # ============================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  M9: Proposal Reviewer 分野横断テスト"
+echo "  M10: Proposal Reviewer 分野横断テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -365,7 +397,7 @@ check_keyword "$REV" "対象外" "対象外研究計画チェック"
 # ============================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  M10: Research Advisor 分野対応力テスト"
+echo "  M11: Research Advisor 分野対応力テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -386,7 +418,7 @@ check_keyword "$ADV" "審査観点" "審査観点との紐付け"
 # ============================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  M11: エッジケース・境界値テスト"
+echo "  M12: エッジケース・境界値テスト"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -432,6 +464,7 @@ check_keyword "skills/spread1000-azure-architect/SKILL.md" "phase0-research-plan
 check_keyword "skills/spread1000-cost-estimator/SKILL.md" "phase1-azure-architecture" "Phase1→2 データフロー"
 check_keyword "skills/spread1000-proposal-writer/SKILL.md" "phase0\|phase1\|phase2" "Phase0,1,2→3 データフロー"
 check_keyword "skills/spread1000-iac-deployer/SKILL.md" "phase1-azure-architecture" "Phase1→5 データフロー"
+check_keyword "skills/spread1000-experiment-guide/SKILL.md" "phase1-azure-architecture\|phase0-research-plan" "Phase0,1→5c データフロー"
 check_keyword "skills/spread1000-post-award/SKILL.md" "phase3-proposal" "Phase3→6 データフロー"
 
 echo "  ── Prohibited Operations ──"
@@ -452,7 +485,7 @@ done
 # ============================================================
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  M12: 全体整合性クロスチェック"
+echo "  M13: 全体整合性クロスチェック"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -502,5 +535,5 @@ if [[ ${#WARNINGS[@]} -gt 0 ]]; then
 fi
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Total: $((PASS + FAIL + WARN)) tests (12 categories)"
+echo "  Total: $((PASS + FAIL + WARN)) tests (13 categories)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
