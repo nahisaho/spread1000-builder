@@ -64,6 +64,10 @@ Calculate costs from the Azure architecture design and generate estimates aligne
    - Total cost / 総額コスト for the full research period / 研究期間 (~180 days)
    - Comparison of cost optimization options
    - Verify that 直接経費 fits within the 予算上限（500万円以下）
+   - **算定根拠の記載**: 各リソースの「算定根拠」列に以下を記入する
+     - 単価の出典（API URL または公式ページ URL）
+     - 使用量の算定方法（例: 平日8h × 20日 = 月160時間）
+     - 計算式（例: $3.50/h × 160h = $560/月）
 4. **Generate budget plan**: Save as `output/{project-name}/phase2-cost-estimate.md`
    - Reuse `assets/cost-estimate-template.md` when producing the estimate
 5. **Validation**: Confirm alignment with the SPReAD budget ceiling (直接経費 ≤ ¥5M)
@@ -79,6 +83,8 @@ Calculate costs from the Azure architecture design and generate estimates aligne
 - [ ] Cost optimization options (Spot VMs, RI, shutdown schedules) have been evaluated
 - [ ] Alignment with SPReAD budget requirements (直接経費 ≤ ¥5M, 間接経費 30%) is confirmed
 - [ ] Exchange rate (JPY/USD) is stated
+- [ ] 全リソースの「算定根拠」列に単価出典・使用量根拠・計算式が記載されている
+- [ ] 「6. 算定根拠の詳細」セクションに価格取得ソース・為替レート根拠・使用量算定根拠が記載されている
 
 ## HARD GATE — Price Verification
 
