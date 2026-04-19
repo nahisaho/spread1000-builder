@@ -41,6 +41,36 @@ Reference for Azure service selection. Lists research-oriented services and reco
 
 ## AI Services
 
+### Azure AI Foundry Platform
+
+Azure AI Foundry is the unified AI platform for building, deploying, and managing AI models. **When AI Foundry provides a capability, always prefer it over raw GPU VMs.**
+
+| Capability | Description | Use Instead Of |
+|-----------|-------------|----------------|
+| Model Catalog | 1,900+ pre-built models (OpenAI, Meta Llama, Mistral, Phi, etc.) | Self-hosting OSS models on GPU VM |
+| Serverless API (MaaS) | Pay-per-token inference, no GPU management required | GPU VM for inference of catalog models |
+| Managed Online Endpoints | Deploy any model with managed compute, auto-scaling | Self-managed GPU VM inference servers |
+| Managed Fine-tuning | Fine-tune supported models without managing compute | GPU VM fine-tuning of supported models |
+| Prompt Flow | LLM orchestration and evaluation | Custom inference pipeline on GPU VM |
+| AI for Science Models | Domain-specific foundation models (see below) | Training equivalent models from scratch |
+
+#### AI Foundry vs GPU VM 判定マトリクス
+
+| Scenario | Use AI Foundry | Use GPU VM |
+|----------|---------------|------------|
+| Pre-trained model inference (LLM, vision, etc.) | ✅ Serverless API or Managed Endpoint | ❌ |
+| Fine-tuning a model available in Foundry catalog | ✅ Managed Fine-tuning | ❌ |
+| AI for Science foundation model (Aurora, MatterGen, etc.) | ✅ Model Catalog deployment | ❌ |
+| Custom model training from scratch | ❌ | ✅ AML Compute Cluster |
+| Fine-tuning a model NOT in Foundry catalog | ❌ | ✅ AML Compute Cluster |
+| Traditional HPC simulation (MPI, CFD, DFT) | ❌ | ✅ HPC VM (HB/HX series) |
+| NVIDIA domain framework (BioNeMo, Modulus, Clara) | ❌ | ✅ GPU VM with framework |
+| Custom distributed training (DDP, DeepSpeed, FSDP) | ❌ | ✅ AML Compute Cluster |
+
+> **❗ 重要ルール**: AI Foundry のモデルカタログに存在するモデルを GPU VM 上でセルフホスティングする設計は禁止。サーバーレス API または Managed Endpoint を使用すること。
+
+### General AI Services
+
 | Service | Use Case | Recommended Scenario |
 |---------|----------|----------------------|
 | Azure OpenAI Service | LLM API | Text generation, summarization, classification |
@@ -48,9 +78,9 @@ Reference for Azure service selection. Lists research-oriented services and reco
 | Azure AI Document Intelligence | Document analysis | Research paper PDF parsing, data extraction |
 | [Microsoft GraphRAG](https://github.com/microsoft/graphrag) | Knowledge graph + RAG | Structured insight extraction from knowledge graphs, discovery of inter-literature relationships |
 
-### AI for Science Foundation Models (Microsoft Foundry)
+### AI for Science Foundation Models (Azure AI Foundry)
 
-Models developed by Microsoft Research AI for Science, deployable from the [Azure AI Foundry](https://ai.azure.com/) model catalog. Purpose-built for scientific research.
+Models developed by Microsoft Research AI for Science, **deployed via [Azure AI Foundry](https://ai.azure.com/) model catalog**. Purpose-built for scientific research. **Always deploy these through AI Foundry — do NOT design GPU VM infrastructure to self-host them.**
 
 | Model | Domain | Purpose | Recommended Scenario |
 |-------|--------|---------|----------------------|

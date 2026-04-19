@@ -184,12 +184,19 @@ echo "  ── references/ ──"
 if [[ -f "$ARCH_REF" ]]; then
   check_keyword "$ARCH_REF" "NC\|ND\|GPU" "ref: GPU VMシリーズ"
   check_keyword "$ARCH_REF" "Batch\|CycleCloud\|HPC" "ref: HPC計算"
+  check_keyword "$ARCH_REF" "AI Foundry" "ref: AI Foundryプラットフォーム"
+  check_keyword "$ARCH_REF" "Serverless API\|Managed Endpoint\|Managed Fine-tuning" "ref: AI Foundryデプロイ方式"
+  check_keyword "$ARCH_REF" "AI Foundry vs GPU VM\|判定マトリクス" "ref: Foundry vs GPU VM判定基準"
   check_keyword_warn "$ARCH_REF" "Health Data\|DICOM" "ref: 医療データ基盤"
   check_keyword_warn "$ARCH_REF" "TRE\|Trusted Research" "ref: セキュアリサーチ"
   check_keyword_warn "$ARCH_REF" "Planetary Computer" "ref: 地球科学データ"
 else
   fail "azure-research-services.md 不在"
 fi
+
+echo "  ── AI Foundry First Rule ──"
+check_keyword "$ARCH" "AI Foundry First" "SKILL: AI Foundry First ルール"
+check_keyword "$ARCH" "Serverless API\|Managed Endpoint" "SKILL: AI Foundryデプロイ方式言及"
 
 # ============================================================
 echo ""

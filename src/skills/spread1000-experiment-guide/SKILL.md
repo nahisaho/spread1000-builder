@@ -120,7 +120,13 @@ Document the initial environment setup procedure:
 
 ### Step 5: Generate Inference & Evaluation Procedure
 
-1. **推論ジョブの実行**
+1. **推論方式の選定**（AI Foundry First ルール適用）
+   - AI Foundry モデルカタログのモデルを使用している場合:
+     - **Serverless API**: pay-per-token、インフラ管理不要
+     - **Managed Online Endpoint**: カスタムモデルのマネージド推論
+   - GPU VM での推論は、AI Foundry で提供されていないカスタムモデルの場合のみ
+
+2. **推論ジョブの実行**
    - バッチ推論パイプライン
    - リアルタイム推論エンドポイント（該当時）
 

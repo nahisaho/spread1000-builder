@@ -29,6 +29,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
 
 1. **Research Plan Analysis**: Extract computational and data requirements
 2. **Azure Service Selection**: Read `references/azure-research-services.md` as the single source of truth for available services, then select the optimal combination covering Compute, Storage, AI Services, Data Analytics, Networking, and Security
+   - **AI Foundry First Rule**: Before selecting GPU VM compute, check the AI Foundry vs GPU VM decision matrix in the reference. If AI Foundry provides the required capability (inference, fine-tuning, AI for Science models), MUST use AI Foundry (Serverless API / Managed Endpoint / Managed Fine-tuning) instead of GPU VMs. GPU VMs are only for: custom training from scratch, unsupported fine-tuning, HPC simulation, NVIDIA domain frameworks.
 3. **Architecture Design**:
    - Create component diagram (Mermaid)
    - Create data flow diagram
@@ -58,6 +59,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
 ## Quality Gates
 
 - [ ] All computational requirements from the research plan are mapped to Azure resources
+- [ ] AI Foundry First Rule is applied: no GPU VM is used for tasks that AI Foundry can handle (inference of catalog models, supported fine-tuning, AI for Science models)
 - [ ] GPU specifications are suitable for the required model size and training volume
 - [ ] Data storage capacity and throughput meet research data requirements
 - [ ] Security (RBAC, network isolation, encryption) is designed
@@ -68,6 +70,7 @@ Design the optimal Microsoft Azure architecture for the research plan.
 
 ## Gotchas
 
+- **AI Foundry First**: AI Foundry のモデルカタログに存在するモデルを GPU VM でセルフホスティングする設計は禁止。サーバーレス API / Managed Endpoint / Managed Fine-tuning を使うこと。GPU VM が許容されるのは、カスタムモデルのフルトレーニング、AI Foundry 未対応のファインチューニング、HPC シミュレーション、NVIDIA ドメインフレームワークのみ
 - Azure GPU VMs (NC series, ND series) have significantly different availability by region. Always verify availability in Japan East（リージョンによる GPU VM 可用性を必ず事前確認すること）
 - Azure Machine Learning compute clusters and compute instances serve different purposes. Use clusters for training, instances for development
 - Select Azure Blob Storage access tiers (Hot/Cool/Archive) appropriately based on data access frequency

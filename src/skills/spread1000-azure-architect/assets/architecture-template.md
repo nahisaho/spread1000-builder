@@ -31,7 +31,15 @@ graph TB
 
 ## 3. Resource Configuration
 
-### Compute
+### AI Foundry (Managed AI Services)
+
+| Resource | Service | Model / Capability | Deployment Type | Purpose |
+|----------|---------|-------------------|-----------------|---------|
+| | AI Foundry Model Catalog | | Serverless API / Managed Endpoint | |
+
+> **AI Foundry First Rule**: AI Foundry で提供されている機能（推論、ファインチューニング、AI for Science モデル）は GPU VM ではなく AI Foundry を使用すること。
+
+### Compute (Custom Training / HPC Only)
 
 | Resource | Service | SKU | Quantity | Purpose |
 |----------|---------|-----|----------|---------|
