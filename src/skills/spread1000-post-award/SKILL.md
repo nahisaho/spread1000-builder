@@ -113,9 +113,10 @@ Create an interim progress memo at approximately 3 months from research start an
 | 設備備品費 | | | | | |
 | 消耗品費 | | | | | |
 | 旅費 | | | | | |
-| 人件費・謝金 | | | | | |
 | その他 | | | | | |
 | **直接経費合計** | | | | | |
+
+> ⚠️ **SPReAD では人件費・謝金は支出不可です。** 費目に計上しないでください。
 
 ## 4. 後半期間の計画
 （残り90日間の研究計画・スケジュール）
@@ -263,9 +264,10 @@ Save the accounting report template for after the research period ends to `outpu
 | 設備備品費 | | | | |
 | 消耗品費 | | | | |
 | 旅費 | | | | |
-| 人件費・謝金 | | | | |
 | その他 | | | | |
 | **合計** | | | | |
+
+> ⚠️ **SPReAD では人件費・謝金は支出不可です。** 費目に計上しないでください。
 
 ## 間接経費
 - 交付決定額: 直接経費の30% = {{金額}}円

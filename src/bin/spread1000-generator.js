@@ -10,6 +10,20 @@ const DRAWIO_REPO = "https://github.com/simonkurtz-MSFT/drawio-mcp-server.git";
 const DRAWIO_DOCKER_IMAGE = "simonkurtzmsft/drawio-mcp-server:latest";
 const PKG_DIR = path.resolve(__dirname, "..");
 
+// ToolUniverse MCP — compact mode server (uvx tooluniverse)
+// https://github.com/mims-harvard/ToolUniverse
+const TOOLUNIVERSE_VSCODE_ENTRY = {
+  type: "stdio",
+  command: "uvx",
+  args: ["tooluniverse"],
+  env: { PYTHONIOENCODING: "utf-8" }
+};
+const TOOLUNIVERSE_CLAUDE_ENTRY = {
+  command: "uvx",
+  args: ["tooluniverse"],
+  env: { PYTHONIOENCODING: "utf-8" }
+};
+
 // ── CLI ──────────────────────────────────────────────
 const args = process.argv.slice(2);
 const command = args[0];
@@ -36,13 +50,20 @@ Usage:
   npx @nahisaho/spread1000-builder init [method]
 
 Methods:
-  docker   (default) Pull Docker image and configure VS Code MCP
-  deno     Clone repo and configure VS Code MCP with Deno stdio transport
+  docker   (default) Pull Docker image and configure VS Code MCP + ToolUniverse MCP
+  deno     Clone repo and configure VS Code MCP with Deno stdio transport + ToolUniverse MCP
+
+ToolUniverse MCP (always configured):
+  Prerequisite: uv  https://docs.astral.sh/uv/getting-started/installation/
+  Provides 1,200+ scientific tools (PubMed, ArXiv, UniProt, ChEMBL, etc.)
+  for AI for Science research in Phase 0.
+  Configured for: VS Code/GitHub Copilot (.vscode/mcp.json)
+                  Claude Code (.mcp.json)
 
 Examples:
-  npx @nahisaho/spread1000-builder init            # Deploy suite + Docker setup
-  npx @nahisaho/spread1000-builder init docker     # Deploy suite + Docker
-  npx @nahisaho/spread1000-builder init deno       # Deploy suite + Deno (source)
+  npx @nahisaho/spread1000-builder init            # Deploy suite + Docker + ToolUniverse
+  npx @nahisaho/spread1000-builder init docker     # Deploy suite + Docker + ToolUniverse
+  npx @nahisaho/spread1000-builder init deno       # Deploy suite + Deno + ToolUniverse
 `);
 }
 
@@ -51,6 +72,7 @@ function init(method) {
   console.log("\n🔧 spread1000-generator init\n");
 
   deployProjectFiles();
+  initToolUniverse();
 
   if (method === "docker") {
     initDocker();
@@ -67,6 +89,31 @@ function deployProjectFiles() {
   console.log(`📁 Deploying SPReAD Builder assets to ${projectRoot} ...`);
   deploySuite(PKG_DIR, projectRoot);
   console.log("✅ Project files deployed for GitHub Copilot and Claude Code.\n");
+}
+
+// ── ToolUniverse MCP ─────────────────────────────────
+function initToolUniverse() {
+  console.log("🔬 Configuring ToolUniverse MCP (AI for Science tools) ...");
+
+  // Warn if uv is not installed (non-fatal — user may install later)
+  if (!commandExists("uv")) {
+    console.warn("⚠️  uv is not installed. ToolUniverse MCP requires uv.");
+    console.warn("   Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh");
+    console.warn("   Then restart your terminal and re-run this init command.");
+    console.warn("   Skipping ToolUniverse MCP configuration.\n");
+    return;
+  }
+
+  // 1. Configure VS Code / GitHub Copilot (.vscode/mcp.json)
+  writeMcpConfig("tooluniverse", TOOLUNIVERSE_VSCODE_ENTRY);
+
+  // 2. Configure Claude Code (.mcp.json in project root)
+  writeClaudeCodeMcpConfig("tooluniverse", TOOLUNIVERSE_CLAUDE_ENTRY);
+
+  console.log("✅ ToolUniverse MCP configured!");
+  console.log("   VS Code / GitHub Copilot: .vscode/mcp.json");
+  console.log("   Claude Code:              .mcp.json");
+  console.log("   Restart VS Code / Claude Code to activate.\n");
 }
 
 // ── Docker ───────────────────────────────────────────
@@ -129,11 +176,9 @@ function initDocker() {
 
   // 5. Configure VS Code MCP
   const mcpConfig = {
-    drawio: {
-      url: "http://localhost:8080/mcp"
-    }
+    url: "http://localhost:8080/mcp"
   };
-  writeMcpConfig(mcpConfig);
+  writeMcpConfig("drawio", mcpConfig);
 
   console.log("\n✅ Docker setup complete!");
   console.log("   Container: drawio-mcp-server (port 8080)");
@@ -176,18 +221,16 @@ function initDeno() {
   // 4. Configure VS Code MCP (stdio transport)
   const indexPath = path.resolve(installDir, "src", "index.ts");
   const mcpConfig = {
-    drawio: {
-      command: "deno",
-      args: [
-        "run",
-        "--allow-net",
-        "--allow-read",
-        "--allow-env",
-        indexPath
-      ]
-    }
+    command: "deno",
+    args: [
+      "run",
+      "--allow-net",
+      "--allow-read",
+      "--allow-env",
+      indexPath
+    ]
   };
-  writeMcpConfig(mcpConfig);
+  writeMcpConfig("drawio", mcpConfig);
 
   console.log("\n✅ Deno setup complete!");
   console.log(`   Source:   ${installDir}`);
@@ -216,7 +259,7 @@ function isContainerRunning(name) {
   }
 }
 
-function writeMcpConfig(serverConfig) {
+function writeMcpConfig(serverName, serverConfig) {
   const vscodeDir = path.resolve(".vscode");
   const mcpPath = path.join(vscodeDir, "mcp.json");
 
@@ -233,13 +276,37 @@ function writeMcpConfig(serverConfig) {
     }
   }
 
-  // Add/update drawio server entry
-  config.servers.drawio = serverConfig;
+  // Add/update server entry
+  config.servers[serverName] = serverConfig;
 
   // Write
   fs.mkdirSync(vscodeDir, { recursive: true });
   fs.writeFileSync(mcpPath, JSON.stringify(config, null, 2) + "\n");
-  console.log("📝 Updated .vscode/mcp.json with drawio MCP server.");
+  console.log(`📝 Updated .vscode/mcp.json with '${serverName}' MCP server.`);
+}
+
+function writeClaudeCodeMcpConfig(serverName, serverConfig) {
+  const mcpPath = path.resolve(".mcp.json");
+
+  let config = { mcpServers: {} };
+
+  // Read existing .mcp.json if present
+  if (fs.existsSync(mcpPath)) {
+    try {
+      config = JSON.parse(fs.readFileSync(mcpPath, "utf8"));
+      if (!config.mcpServers) config.mcpServers = {};
+    } catch {
+      console.warn("⚠️  Could not parse existing .mcp.json. Creating new one.");
+      config = { mcpServers: {} };
+    }
+  }
+
+  // Add/update server entry
+  config.mcpServers[serverName] = serverConfig;
+
+  // Write
+  fs.writeFileSync(mcpPath, JSON.stringify(config, null, 2) + "\n");
+  console.log(`📝 Updated .mcp.json with '${serverName}' MCP server (Claude Code).`);
 }
 
 function addToGitignore(entry) {

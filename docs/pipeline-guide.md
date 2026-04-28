@@ -49,7 +49,7 @@
 | コンポーネント | 種類 | 役割 |
 |--------------|------|------|
 | `spread1000-context-collector` | Skill | 1問1答でコンテキスト収集 → メタプロンプト生成 |
-| `spread1000-research-planner` | Skill | AI for Science 研究プランの策定 |
+| `spread1000-research-planner` | Skill | AI for Science 研究プランの策定（ToolUniverse MCP による文献調査） |
 | `spread1000-azure-architect` | Skill | Azure アーキテクチャ設計 |
 | `spread1000-cost-estimator` | Skill | Azure Retail Prices API による実価格コスト算出 |
 | `spread1000-proposal-writer` | Skill | SPReAD 申請書の生成 |
@@ -177,9 +177,12 @@ Pre  ⏸️→ Phase 0 ⏸️→ Phase 1 → Phase 1b ⏸️→ Phase 2 → Phas
 # プロジェクトディレクトリで実行
 npm install @nahisaho/spread1000-builder
 
-# draw.io MCP まで含めて初期設定する場合
+# draw.io MCP + ToolUniverse MCP まで含めて初期設定する場合
 npx @nahisaho/spread1000-builder init
 ```
+
+> **ToolUniverse MCP** が同時に設定されます。`uv` が未インストールの場合はスキップされ、警告が表示されます。
+> インストール: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
 インストールにより、以下が自動配置されます:
 
@@ -203,6 +206,9 @@ npx @nahisaho/spread1000-builder init
     ├── spread1000-experiment-guide/   # SKILL.md + assets/
     └── spread1000-final-reviewer/     # SKILL.md + assets/ + references/
 
+.vscode/
+└── mcp.json                           # ToolUniverse MCP + draw.io MCP の設定
+
 .claude/
 ├── agents/
 │   ├── research-advisor.md            # Claude Code 用 subagent
@@ -221,6 +227,7 @@ npx @nahisaho/spread1000-builder init
    └── spread1000-final-reviewer/
 
 CLAUDE.md                              # Claude Code 指示ファイル
+.mcp.json                              # ToolUniverse MCP 設定（Claude Code 用）
 ```
 
 ### 3.2 必要な環境
@@ -230,6 +237,7 @@ CLAUDE.md                              # Claude Code 指示ファイル
 | VS Code | 最新版 |
 | GitHub Copilot または Claude Code | いずれかのエージェント実行環境 |
 | Node.js | v18 以上 |
+| uv | Phase 0 ToolUniverse MCP 使用時（必須）— [インストール](https://docs.astral.sh/uv/getting-started/installation/) |
 | Azure CLI | デプロイ時のみ必要 |
 
 ### 3.3 出力ディレクトリ
@@ -382,17 +390,30 @@ SPReAD（約180日間、直接経費500万円以下）に応募します。
 
 ### 6.4 エージェントの動作
 
-1. **Web リサーチ** — 以下のソースを自動検索:
+1. **ToolUniverse MCP リサーチ**（一次情報源 — `tooluniverse` MCP サーバーが必要）:
+   科学データベース・文献を横断的に検索します。
+
+   | MCP ツール | 用途 |
+   |-----------|------|
+   | `find_tools("literature search AI for Science")` | 利用可能ツールの発見 |
+   | `execute_tool("PubMed_search_articles", {...})` | PubMed 文献検索 |
+   | `execute_tool("ArXiv_search_papers", {...})` | arXiv プレプリント検索 |
+   | `execute_tool("SemanticScholar_search_papers", {...})` | Semantic Scholar 検索 |
+   | `execute_tool("EuropePMC_search", {...})` | Europe PMC 検索 |
+   | 分野別ツール（UniProt, ChEMBL, PubChem 等） | `find_tools("<分野> database")` で発見 |
+
+   > ToolUniverse は 1,200+ の科学ツール（PubMed, UniProt, ChEMBL, FAERS, ClinicalTrials.gov 等）へのアクセスを提供します。
+   > MCP が利用不可の場合は Web リサーチにフォールバックします。
+
+2. **Web リサーチ**（補完情報源 — ToolUniverse 後に実行）:
    - Azure AI Foundry モデルカタログ（Aurora, MatterGen, BioEmu 等）
    - Microsoft Research AI for Science
-   - arXiv（関連分野の最新プレプリント）
-   - Google Scholar（被引用数・最新動向）
    - JST サイト（SPReAD 最新公募情報）
 
-2. **AI 活用方針の策定** — 研究課題と AI 手法のマッピング表を作成
+3. **AI 活用方針の策定** — 研究課題と AI 手法のマッピング表を作成
 
-3. **研究プラン生成** — 以下のセクションで構成:
-   - 研究の背景と課題
+4. **研究プラン生成** — 以下のセクションで構成:
+   - 研究の背景と課題（ToolUniverse 取得文献を引用）
    - AI 活用戦略（データ収集 → 前処理 → モデリング → 検証）
    - 180日間のマイルストーン
    - 必要な計算リソースの概算
@@ -400,15 +421,16 @@ SPReAD（約180日間、直接経費500万円以下）に応募します。
 
 ### 6.5 出力ファイル
 
-- `output/phase0-research-plan.md` — AI 活用研究プラン
-- `output/phase0-research-survey.md` — Web リサーチ結果サマリー
+- `output/phase0-research-plan.md` — AI 活用研究プラン（ToolUniverse 取得文献を引用）
+- `output/phase0-research-survey.md` — 文献・データベースリサーチ結果サマリー
 
 ### 6.6 品質ゲート
 
 承認前に以下を確認してください:
 
+- [ ] ToolUniverse MCP が呼び出され、結果が引用されているか（未使用の場合は理由が記載されているか）
 - [ ] 研究テーマと AI 手法の対応が明確か
-- [ ] 3件以上の関連事例が引用されているか
+- [ ] 3件以上の関連事例が DOI / URL 付きで引用されているか
 - [ ] 計算リソースが定量的に見積もられているか
 - [ ] 研究スケジュールにマイルストーンがあるか
 - [ ] AI for Science の文脈での新規性が説明されているか
