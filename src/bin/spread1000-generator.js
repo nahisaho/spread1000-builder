@@ -4,9 +4,11 @@
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
+const { deploySuite } = require("../deploy");
 
 const DRAWIO_REPO = "https://github.com/simonkurtz-MSFT/drawio-mcp-server.git";
 const DRAWIO_DOCKER_IMAGE = "simonkurtzmsft/drawio-mcp-server:latest";
+const PKG_DIR = path.resolve(__dirname, "..");
 
 // ── CLI ──────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -28,7 +30,7 @@ if (command === "init") {
 
 function printUsage() {
   console.log(`
-spread1000-generator — draw.io MCP Server setup for SPReAD Builder
+spread1000-generator — SPReAD Builder setup for GitHub Copilot and Claude Code
 
 Usage:
   npx @nahisaho/spread1000-builder init [method]
@@ -38,15 +40,17 @@ Methods:
   deno     Clone repo and configure VS Code MCP with Deno stdio transport
 
 Examples:
-  npx @nahisaho/spread1000-builder init           # Docker (recommended)
-  npx @nahisaho/spread1000-builder init docker     # Docker
-  npx @nahisaho/spread1000-builder init deno       # Deno (source)
+  npx @nahisaho/spread1000-builder init            # Deploy suite + Docker setup
+  npx @nahisaho/spread1000-builder init docker     # Deploy suite + Docker
+  npx @nahisaho/spread1000-builder init deno       # Deploy suite + Deno (source)
 `);
 }
 
 // ── init ─────────────────────────────────────────────
 function init(method) {
   console.log("\n🔧 spread1000-generator init\n");
+
+  deployProjectFiles();
 
   if (method === "docker") {
     initDocker();
@@ -56,6 +60,13 @@ function init(method) {
     console.error(`Unknown method: ${method}. Use 'docker' or 'deno'.`);
     process.exit(1);
   }
+}
+
+function deployProjectFiles() {
+  const projectRoot = process.cwd();
+  console.log(`📁 Deploying SPReAD Builder assets to ${projectRoot} ...`);
+  deploySuite(PKG_DIR, projectRoot);
+  console.log("✅ Project files deployed for GitHub Copilot and Claude Code.\n");
 }
 
 // ── Docker ───────────────────────────────────────────

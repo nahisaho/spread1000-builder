@@ -33,18 +33,18 @@
 
 ### 1.1 本書の目的
 
-本書は、`spread1000-builder`（GitHub Copilot Agent Skills スイート）を使用して、文部科学省「AI for Science 萌芽的挑戦研究創出事業（SPReAD）」の研究計画策定から Azure 基盤デプロイまでを一貫して実行するための**ステップバイステップガイド**です。
+本書は、`spread1000-builder`（GitHub Copilot / Claude Code スキルスイート）を使用して、文部科学省「AI for Science 萌芽的挑戦研究創出事業（SPReAD）」の研究計画策定から Azure 基盤デプロイまでを一貫して実行するための**ステップバイステップガイド**です。
 
 ### 1.2 対象読者
 
 - SPReAD への応募を検討している研究者
 - AI を自身の研究に活用したいが方法がわからない方
 - Azure 上に研究基盤を構築したい方
-- GitHub Copilot を活用して研究申請書を作成したい方
+- GitHub Copilot または Claude Code を活用して研究申請書を作成したい方
 
 ### 1.3 spread1000-builder とは
 
-12のサブスキルと2つのカスタムエージェントで構成される GitHub Copilot Agent Skills スイートです。研究者の漠然とした構想から、具体的な申請書・インフラコードまでを自動生成します。
+12のサブスキルと2つの専門エージェントで構成される GitHub Copilot / Claude Code 向けスイートです。研究者の漠然とした構想から、具体的な申請書・インフラコードまでを自動生成します。
 
 | コンポーネント | 種類 | 役割 |
 |--------------|------|------|
@@ -175,10 +175,13 @@ Pre  ⏸️→ Phase 0 ⏸️→ Phase 1 → Phase 1b ⏸️→ Phase 2 → Phas
 
 ```bash
 # プロジェクトディレクトリで実行
-npm install spread1000-builder
+npm install @nahisaho/spread1000-builder
+
+# draw.io MCP まで含めて初期設定する場合
+npx @nahisaho/spread1000-builder init
 ```
 
-インストールにより、以下が `.github/` に自動配置されます:
+インストールにより、以下が自動配置されます:
 
 ```
 .github/
@@ -199,6 +202,25 @@ npm install spread1000-builder
     ├── spread1000-azure-deployer/     # SKILL.md + assets/ + references/
     ├── spread1000-experiment-guide/   # SKILL.md + assets/
     └── spread1000-final-reviewer/     # SKILL.md + assets/ + references/
+
+.claude/
+├── agents/
+│   ├── research-advisor.md            # Claude Code 用 subagent
+│   └── proposal-reviewer.md           # Claude Code 用 subagent
+└── skills/
+   ├── spread1000-context-collector/
+   ├── spread1000-research-planner/
+   ├── spread1000-azure-architect/
+   ├── spread1000-cost-estimator/
+   ├── spread1000-proposal-writer/
+   ├── spread1000-submission-guide/
+   ├── spread1000-post-award/
+   ├── spread1000-iac-deployer/
+   ├── spread1000-azure-deployer/
+   ├── spread1000-experiment-guide/
+   └── spread1000-final-reviewer/
+
+CLAUDE.md                              # Claude Code 指示ファイル
 ```
 
 ### 3.2 必要な環境
@@ -206,7 +228,7 @@ npm install spread1000-builder
 | 項目 | 要件 |
 |------|------|
 | VS Code | 最新版 |
-| GitHub Copilot | Copilot Chat 有効（Agent Mode 対応） |
+| GitHub Copilot または Claude Code | いずれかのエージェント実行環境 |
 | Node.js | v18 以上 |
 | Azure CLI | デプロイ時のみ必要 |
 

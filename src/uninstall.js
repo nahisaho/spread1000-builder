@@ -3,33 +3,17 @@
 
 const fs = require("fs");
 const path = require("path");
+const { PACKAGE_NAME, findProjectRoot } = require("./deploy");
 
-const PACKAGE_NAME = "@nahisaho/spread1000-builder";
 const PKG_DIR = __dirname;
 
-// ── Detect project root ─────────────────────────────
-function findProjectRoot() {
-  if (process.env.INIT_CWD) return process.env.INIT_CWD;
-  let dir = path.resolve(PKG_DIR, "..");
-  while (dir !== path.dirname(dir)) {
-    const pkg = path.join(dir, "package.json");
-    if (fs.existsSync(pkg)) {
-      try {
-        const data = JSON.parse(fs.readFileSync(pkg, "utf8"));
-        if (data.name !== PACKAGE_NAME) return dir;
-      } catch { /* ignore */ }
-    }
-    dir = path.dirname(dir);
-  }
-  return null;
-}
-
-const PROJECT_ROOT = findProjectRoot();
+const PROJECT_ROOT = findProjectRoot(PKG_DIR);
 if (!PROJECT_ROOT || path.resolve(PROJECT_ROOT) === path.resolve(PKG_DIR)) {
   process.exit(0);
 }
 
 const GH_DIR = path.join(PROJECT_ROOT, ".github");
+const CLAUDE_DIR = path.join(PROJECT_ROOT, ".claude");
 
 // ── Helpers ──────────────────────────────────────────
 function rmrf(p) {
@@ -47,7 +31,10 @@ if (fs.existsSync(skillsSrc)) {
   const dirs = fs.readdirSync(skillsSrc, { withFileTypes: true }).filter(d => d.isDirectory());
   for (const d of dirs) {
     if (rmrf(path.join(GH_DIR, "skills", d.name))) {
-      console.log(`  -     skills/${d.name}`);
+      console.log(`  -     .github/skills/${d.name}`);
+    }
+    if (rmrf(path.join(CLAUDE_DIR, "skills", d.name))) {
+      console.log(`  -     .claude/skills/${d.name}`);
     }
   }
 }
@@ -57,14 +44,20 @@ const agentsSrc = path.join(PKG_DIR, "agents");
 if (fs.existsSync(agentsSrc)) {
   const files = fs.readdirSync(agentsSrc).filter(f => f.endsWith(".md"));
   for (const f of files) {
-    const target = path.join(GH_DIR, "agents", f);
-    if (fs.existsSync(target)) {
-      fs.unlinkSync(target);
-      console.log(`  -     agents/${f}`);
+    const githubTarget = path.join(GH_DIR, "agents", f);
+    if (fs.existsSync(githubTarget)) {
+      fs.unlinkSync(githubTarget);
+      console.log(`  -     .github/agents/${f}`);
+    }
+
+    const claudeTarget = path.join(CLAUDE_DIR, "agents", f.replace(/\.agent\.md$/, ".md"));
+    if (fs.existsSync(claudeTarget)) {
+      fs.unlinkSync(claudeTarget);
+      console.log(`  -     .claude/agents/${path.basename(claudeTarget)}`);
     }
   }
 }
 
-// AGENTS.md / copilot-instructions.md are preserved (user may have edited them)
-console.log(`\n  note: .github/AGENTS.md and copilot-instructions.md are preserved`);
+// AGENTS.md / copilot-instructions.md / CLAUDE.md are preserved (user may have edited them)
+console.log("\n  note: .github/AGENTS.md, .github/copilot-instructions.md, and CLAUDE.md are preserved");
 console.log(`${PACKAGE_NAME}: done\n`);

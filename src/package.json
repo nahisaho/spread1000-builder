@@ -1,8 +1,9 @@
 {
   "name": "@nahisaho/spread1000-builder",
   "version": "0.7.2",
-  "description": "文部科学省 AI for Science 萌芽的挑戦研究創出事業（SPReAD）公募支援 GitHub Copilot Agent Skills スイート",
+  "description": "文部科学省 AI for Science 萌芽的挑戦研究創出事業（SPReAD）公募支援 GitHub Copilot / Claude Code スキルスイート",
   "bin": {
+    "spread1000-builder": "bin/spread1000-generator.js",
     "spread1000-generator": "bin/spread1000-generator.js"
   },
   "scripts": {
@@ -14,13 +15,16 @@
     "agents/",
     "bin/",
     "AGENTS.md",
+    "CLAUDE.md",
     "copilot-instructions.md",
+    "deploy.js",
     "install.js",
     "uninstall.js",
     "README.md"
   ],
   "keywords": [
     "github-copilot",
+    "claude-code",
     "agent-skills",
     "copilot-skills",
     "spread",
