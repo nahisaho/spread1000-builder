@@ -53,8 +53,9 @@ Methods:
   docker   (default) Pull Docker image and configure VS Code MCP + ToolUniverse MCP
   deno     Clone repo and configure VS Code MCP with Deno stdio transport + ToolUniverse MCP
 
-ToolUniverse MCP (always configured):
-  Prerequisite: uv  https://docs.astral.sh/uv/getting-started/installation/
+ToolUniverse MCP (always installed and configured):
+  Installs uv automatically if not present.
+  Installs tooluniverse via: uv tool install tooluniverse
   Provides 1,200+ scientific tools (PubMed, ArXiv, UniProt, ChEMBL, etc.)
   for AI for Science research in Phase 0.
   Configured for: VS Code/GitHub Copilot (.vscode/mcp.json)
@@ -93,27 +94,86 @@ function deployProjectFiles() {
 
 // ── ToolUniverse MCP ─────────────────────────────────
 function initToolUniverse() {
-  console.log("🔬 Configuring ToolUniverse MCP (AI for Science tools) ...");
+  console.log("🔬 Installing ToolUniverse MCP (AI for Science tools) ...");
 
-  // Warn if uv is not installed (non-fatal — user may install later)
+  // 1. Install uv if missing
   if (!commandExists("uv")) {
-    console.warn("⚠️  uv is not installed. ToolUniverse MCP requires uv.");
-    console.warn("   Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh");
-    console.warn("   Then restart your terminal and re-run this init command.");
-    console.warn("   Skipping ToolUniverse MCP configuration.\n");
-    return;
+    installUv();
+  } else {
+    console.log("✅ uv is already installed.");
   }
 
-  // 1. Configure VS Code / GitHub Copilot (.vscode/mcp.json)
+  // 2. Resolve uv binary (may have been freshly installed, not yet on PATH)
+  const uvPath = resolveUv();
+  if (!uvPath) {
+    console.error("❌ uv could not be found after installation attempt.");
+    console.error("   Please install uv manually: https://docs.astral.sh/uv/getting-started/installation/");
+    console.error("   Then re-run: npx @nahisaho/spread1000-builder init");
+    process.exit(1);
+  }
+
+  // 3. Install tooluniverse via uv tool install
+  console.log("📦 Installing tooluniverse ...");
+  try {
+    execSync(`"${uvPath}" tool install tooluniverse`, { stdio: "inherit" });
+    console.log("✅ tooluniverse installed.");
+  } catch {
+    console.warn("⚠️  'uv tool install tooluniverse' failed.");
+    console.warn("   tooluniverse will be downloaded on first MCP server start via uvx.");
+  }
+
+  // 4. Configure VS Code / GitHub Copilot (.vscode/mcp.json)
   writeMcpConfig("tooluniverse", TOOLUNIVERSE_VSCODE_ENTRY);
 
-  // 2. Configure Claude Code (.mcp.json in project root)
+  // 5. Configure Claude Code (.mcp.json in project root)
   writeClaudeCodeMcpConfig("tooluniverse", TOOLUNIVERSE_CLAUDE_ENTRY);
 
   console.log("✅ ToolUniverse MCP configured!");
   console.log("   VS Code / GitHub Copilot: .vscode/mcp.json");
   console.log("   Claude Code:              .mcp.json");
   console.log("   Restart VS Code / Claude Code to activate.\n");
+}
+
+function installUv() {
+  console.log("📦 Installing uv (Python package manager) ...");
+  try {
+    if (process.platform === "win32") {
+      execSync(
+        `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`,
+        { stdio: "inherit" }
+      );
+    } else {
+      execSync(
+        "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        { stdio: "inherit" }
+      );
+    }
+    console.log("✅ uv installed.");
+  } catch {
+    console.error("❌ Failed to install uv automatically.");
+    console.error("   Please install manually: https://docs.astral.sh/uv/getting-started/installation/");
+    process.exit(1);
+  }
+}
+
+function resolveUv() {
+  if (commandExists("uv")) return "uv";
+
+  const os = require("os");
+  const candidates = process.platform === "win32"
+    ? [
+        path.join(os.homedir(), ".local", "bin", "uv.exe"),
+        path.join(os.homedir(), ".cargo", "bin", "uv.exe")
+      ]
+    : [
+        path.join(os.homedir(), ".local", "bin", "uv"),
+        path.join(os.homedir(), ".cargo", "bin", "uv")
+      ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
 }
 
 // ── Docker ───────────────────────────────────────────
