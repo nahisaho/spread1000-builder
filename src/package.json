@@ -1,6 +1,6 @@
 {
   "name": "@nahisaho/spread1000-builder",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "文部科学省 AI for Science 萌芽的挑戦研究創出事業（SPReAD）公募支援 GitHub Copilot / Claude Code スキルスイート",
   "bin": {
     "spread1000-builder": "bin/spread1000-generator.js",

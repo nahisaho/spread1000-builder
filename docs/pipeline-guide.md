@@ -371,11 +371,14 @@ CLAUDE.md                              # Claude Code 指示ファイル
 `spread1000-research-planner`
 
 > **重要: 呼び出しフロー**
-> `@research-advisor` はオーケストレーターです。Phase 0 の実処理は必ず `spread1000-research-planner` スキルに委譲されます。エージェントが直接 Web リサーチを実行するのは ToolUniverse MCP が利用不可の場合のフォールバックのみです。
+> `@research-advisor` はオーケストレーターです。Phase 0 の実処理は必ず `spread1000-research-planner` スキルに委譲されます。
 >
 > ```
-> ✅ 正解: @research-advisor → spread1000-research-planner → ToolUniverse MCP → phase0 生成
-> ❌ 誤り: @research-advisor → (直接 Web リサーチ) → phase0 生成（ToolUniverse 未使用）
+> ✅ 正解: @research-advisor → spread1000-research-planner
+>            → 1. Web Search (github-mcp-server)  ← 広域サーベイ
+>            → 2. ToolUniverse MCP               ← 詳細文献調査
+>            → phase0 生成
+> ❌ 誤り: @research-advisor → (Web Search のみ) → phase0 生成（ToolUniverse 未使用）
 > ```
 
 ### 6.3 実行手順
@@ -398,8 +401,19 @@ SPReAD（約180日間、直接経費500万円以下）に応募します。
 
 ### 6.4 エージェントの動作
 
-1. **ToolUniverse MCP リサーチ**（一次情報源 — `tooluniverse` MCP サーバーが必要）:
-   科学データベース・文献を横断的に検索します。
+1. **Web Search (MCP: github-mcp-server)**（一次情報源 — 広域サーベイ）:
+   研究テーマに関する最新動向を幅広く収集します。
+
+   | 検索対象 | 内容 |
+   |---------|------|
+   | AI for Science の最新トレンド・事例 | 分野の先行研究・成功例のブロード検索 |
+   | Azure AI Foundry モデルカタログ | Aurora, MatterGen, BioEmu, Phi-4 等の最新モデル |
+   | Microsoft Research AI for Science | 最新研究プロジェクト・論文 |
+   | JST サイト（SPReAD 最新公募情報） | 最新の公募要領・採択事例 |
+   | 主要会議・ジャーナル | NeurIPS, ICML, Nature, Science 等のハイライト |
+
+2. **ToolUniverse MCP リサーチ**（詳細調査 — Web Search の結果を踏まえて精査）:
+   Web Search で特定されたキーワード・ギャップに対し、科学データベースで詳細検索します。
 
    | MCP ツール | 用途 |
    |-----------|------|
@@ -411,12 +425,7 @@ SPReAD（約180日間、直接経費500万円以下）に応募します。
    | 分野別ツール（UniProt, ChEMBL, PubChem 等） | `find_tools("<分野> database")` で発見 |
 
    > ToolUniverse は 1,200+ の科学ツール（PubMed, UniProt, ChEMBL, FAERS, ClinicalTrials.gov 等）へのアクセスを提供します。
-   > MCP が利用不可の場合は Web リサーチにフォールバックします。
-
-2. **Web リサーチ**（補完情報源 — ToolUniverse 後に実行）:
-   - Azure AI Foundry モデルカタログ（Aurora, MatterGen, BioEmu 等）
-   - Microsoft Research AI for Science
-   - JST サイト（SPReAD 最新公募情報）
+   > MCP が利用不可の場合は Web Search の結果のみで継続し、その旨をファイルに明記します。
 
 3. **AI 活用方針の策定** — 研究課題と AI 手法のマッピング表を作成
 

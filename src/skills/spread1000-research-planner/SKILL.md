@@ -28,9 +28,16 @@ Formulate the optimal AI-powered research plan for the researcher's domain.
 ## Workflow
 
 1. **Hearing**: Confirm the researcher's field, theme, and current challenges
-2. **ToolUniverse MCP Research** (primary — requires `tooluniverse` MCP server):
-   Use the ToolUniverse MCP tools to search scientific databases and literature.
-   First discover available tools, then run targeted queries:
+2. **Web Search (MCP: github-mcp-server)** (primary broad survey):
+   Use the github-mcp-server search tools to gather a wide overview first:
+   - Latest AI for Science trends and success cases in the researcher's domain
+   - Azure AI Foundry model catalog (Aurora, MatterGen, BioEmu, Phi-4, etc.)
+   - Microsoft Research AI for Science pages
+   - JST site for latest SPReAD solicitation information
+   - Key conferences / journals (NeurIPS, ICML, Nature, Science, etc.) for recent highlights
+   > Record all URLs, titles, and key findings from Web Search results.
+3. **ToolUniverse MCP Research** (detailed literature deep-dive — requires `tooluniverse` MCP server):
+   Using keywords and gaps identified in Step 2, run targeted scientific database queries:
    ```
    # Discover relevant tools for the research domain
    find_tools("literature search AI for Science")
@@ -53,12 +60,7 @@ Formulate the optimal AI-powered research plan for the researcher's domain.
    execute_tool("ClinicalTrials_search", ...)           # clinical research
    execute_tool("EuropePMC_search", ...)                # broader literature
    ```
-   > If `tooluniverse` MCP is unavailable, fall back to Step 3 (Web Research).
-3. **Web Research** (supplementary — always run after ToolUniverse):
-   Investigate the following with web fetch/search:
-   - Azure AI Foundry model catalog (Aurora, MatterGen, BioEmu, etc.)
-   - Microsoft Research AI for Science pages
-   - JST site for latest SPReAD solicitation information
+   > If `tooluniverse` MCP is unavailable, document the reason and continue with Web Search results only.
 4. **AI Strategy Formulation**:
    - Map AI methods to research challenges
    - Clarify expected outcomes and breakthroughs
