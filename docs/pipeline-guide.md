@@ -364,11 +364,19 @@ CLAUDE.md                              # Claude Code 指示ファイル
 
 ### 6.1 このフェーズの目的
 
-研究テーマに最適な AI/ML 活用方法を Web リサーチで調査し、180日間の研究計画を策定します。
+研究テーマに最適な AI/ML 活用方法を文献調査で調査し、180日間の研究計画を策定します。
 
 ### 6.2 起動スキル
 
 `spread1000-research-planner`
+
+> **重要: 呼び出しフロー**
+> `@research-advisor` はオーケストレーターです。Phase 0 の実処理は必ず `spread1000-research-planner` スキルに委譲されます。エージェントが直接 Web リサーチを実行するのは ToolUniverse MCP が利用不可の場合のフォールバックのみです。
+>
+> ```
+> ✅ 正解: @research-advisor → spread1000-research-planner → ToolUniverse MCP → phase0 生成
+> ❌ 誤り: @research-advisor → (直接 Web リサーチ) → phase0 生成（ToolUniverse 未使用）
+> ```
 
 ### 6.3 実行手順
 
