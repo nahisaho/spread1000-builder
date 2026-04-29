@@ -65,19 +65,25 @@ Formulate the optimal AI-powered research plan for the researcher's domain.
    - Estimate required computational resources (GPU, storage, network, etc.)
 5. **Research Plan Generation**: Save as `output/{project-name}/phase0-research-plan.md`
    - Reuse `assets/research-plan-template.md` when producing the research plan
+   - **Section 4 (文献調査)**: Copy ToolUniverse execute_tool results verbatim — do NOT paraphrase or fill from memory
+   - **Section 5 (関連事例)**: Select ≥3 papers from Section 4. Each entry must include DOI/URL and source tool name
 6. **Review**: Verify technical feasibility of the research plan
 
 ## Deliverables
 
 - `output/{project-name}/phase0-research-plan.md`: AI-powered research plan (complete)
+  - Section 4「文献調査」: ToolUniverse クエリ記録 + 取得文献リスト（≥5 件、DOI/URL・取得元ツール必須）
+  - Section 5「関連事例」: Section 4 から選択した ≥3 件の先行研究（DOI/URL と関連性を明記）
 - `output/{project-name}/phase0-research-survey.md`: Literature & database research results summary
   (Include ToolUniverse query results: paper titles, DOIs, key findings from PubMed/ArXiv/etc.)
 
 ## Quality Gates
 
 - [ ] ToolUniverse MCP was invoked and results are referenced (or fallback reason stated)
+- [ ] Section 4「文献調査」のクエリ記録表が埋まっており、取得文献リストに ≥5 件記載されている
+- [ ] 各文献エントリに DOI / URL と取得元ツール名が記載されている（LLM 補完禁止）
+- [ ] Section 5「関連事例」が Section 4 の取得文献から ≥3 件選択されており、DOI/URL が一致している
 - [ ] Mapping between research theme and AI methods is clearly described
-- [ ] 3 or more related case studies are cited (with DOI / URL from ToolUniverse or web)
 - [ ] Required computational resources are quantitatively estimated
 - [ ] Research schedule (milestones) is included
 - [ ] Novelty and innovativeness in the AI for Science context is explained
