@@ -234,15 +234,17 @@ function initDocker() {
     console.warn("⚠️  Health check failed. Server may still be starting up.");
   }
 
-  // 5. Configure VS Code MCP
+  // 5. Configure VS Code MCP and Claude Code
   const mcpConfig = {
     url: "http://localhost:8080/mcp"
   };
   writeMcpConfig("drawio", mcpConfig);
+  writeClaudeCodeMcpConfig("drawio", { url: "http://localhost:8080/mcp" });
 
   console.log("\n✅ Docker setup complete!");
   console.log("   Container: drawio-mcp-server (port 8080)");
-  console.log("   VS Code:   .vscode/mcp.json configured\n");
+  console.log("   VS Code:   .vscode/mcp.json configured");
+  console.log("   Claude Code: .mcp.json configured\n");
 }
 
 // ── Deno ─────────────────────────────────────────────
@@ -291,10 +293,12 @@ function initDeno() {
     ]
   };
   writeMcpConfig("drawio", mcpConfig);
+  writeClaudeCodeMcpConfig("drawio", mcpConfig);
 
   console.log("\n✅ Deno setup complete!");
   console.log(`   Source:   ${installDir}`);
-  console.log("   VS Code: .vscode/mcp.json configured (stdio transport)\n");
+  console.log("   VS Code:     .vscode/mcp.json configured (stdio transport)");
+  console.log("   Claude Code: .mcp.json configured (stdio transport)\n");
 }
 
 // ── Helpers ──────────────────────────────────────────
